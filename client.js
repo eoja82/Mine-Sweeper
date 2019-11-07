@@ -1,4 +1,4 @@
-let width = 5, height = 5, size = 25;
+let width = 10, height = 10, size = 25, mines = 10;
 let tBoxes = [], tBoxVecs = [];
 
 class Vec {
@@ -37,29 +37,32 @@ function tBoxesIndex(x1, y1) {
   return index;
 }
 
-function randomBombs() {
+function randomMines() {
+  let totalMines = 0;
   tBoxVecs.map( x => {
-    if (Math.random() < 0.3) {
+    if (Math.random() < 0.1 && totalMines < mines) {
       x.status = "💣";
+      totalMines++;
     } else {
       x.status = "";
     }
   });
 }
-randomBombs();
+randomMines();
 console.log(tBoxVecs);
-// need to fix
+
 function findBombs(x, y, i) {
   let bombs = 0
   let box = tBoxVecs[i];
   for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
     for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
       let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+      //console.log(`testBox: ${testBox.x}, ${testBox.y}, box: ${box.x} ${box.y}`)
       if (testBox === box) {
         continue;
       } else {
-        console.log(`box.status === ${box.status === "💣"}`)
-        if (box.status === "💣") {
+        //console.log(`testBox.status === ${testBox.status === "💣"}`)
+        if (testBox.status === "💣") {
           bombs++;
         }
       }
@@ -70,11 +73,13 @@ function findBombs(x, y, i) {
 
 function bombsNearby() {
   tBoxVecs.map( ({x, y, status}, i) => {
+    //console.log("status: " + status);
     if (status === "💣") {
-      status = status;
+      tBoxVecs[i].status = status;
     } else {
       let bombs = findBombs(x, y, i);
-      bombs === 0 ? status = "" : status = bombs;
+      //console.log("bombs: " + bombs);
+      bombs === 0 ? tBoxVecs[i].status = "" : tBoxVecs[i].status = bombs;
     }
   });
 }
