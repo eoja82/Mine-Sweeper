@@ -13,11 +13,22 @@
   display: block;
 } */
 .box {
-  background-color: lightgray;
   border: 1px solid black;
   text-align: center;
+  font-size: .8em;
   padding: 0;
   display: inline-block;
   margin: 0;
 }
-
+.covered {
+  background-color: rgb(112, 108, 108);
+}
+.uncoveredBlank {
+  background-color: rgb(184, 181, 181);
+}
+.uncoveredBomb {
+ background-color: rgb(184, 181, 181);
+}
+.uncoveredNumber {
+  background-color: rgb(184, 181, 181);
+}
