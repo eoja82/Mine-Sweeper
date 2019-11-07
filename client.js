@@ -1,4 +1,4 @@
-let width = 10, height = 10, size = 25, mines = 10;
+let width = 10, height = 10, size = 25, mines = 15;
 let tBoxes = [], tBoxVecs = [];
 
 class Vec {
@@ -39,14 +39,16 @@ function tBoxesIndex(x1, y1) {
 
 function randomMines() {
   let totalMines = 0;
-  tBoxVecs.map( x => {
-    if (Math.random() < 0.1 && totalMines < mines) {
-      x.status = "💣";
-      totalMines++;
-    } else {
-      x.status = "";
+  function generateMines() {
+    for (let i = 0; i < tBoxVecs.length; i++) {
+      if (Math.random() < 0.1 && totalMines < mines && tBoxVecs[i].status !== "💣") {
+        tBoxVecs[i].status = "💣";
+        totalMines++;
+      }
     }
-  });
+    if (totalMines < mines) generateMines();
+  }
+  generateMines();
 }
 randomMines();
 console.log(tBoxVecs);
