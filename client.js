@@ -87,15 +87,51 @@ function bombsNearby() {
 }
 bombsNearby();
 
+function clearBoxesOnClick(index) {
+  let x = tBoxVecs[index].x;
+  let y = tBoxVecs[index].y;
+  for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
+    for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
+      let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+      //console.log("testBox.status " + testBox.status);
+      if (testBox.status === "💣") {
+        //console.log("continue " + x1 + ": " + y1);
+        continue;
+      } else if (typeof testBox.status === "number") {
+        //console.log("number: " + x1 + ": " + y1);
+        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
+        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
+      } else {
+        //console.log("else " + x1 + ": " + y1);
+        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
+        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
+      }
+    }
+  }
+}
 
-tBoxes.forEach( x => {
-  x.addEventListener("click", buttonClick);
-});
-
-function buttonClick(event) {
+// need to fix here right click flags
+function boxClick(event) {
   //console.log(event);
   let index = event.srcElement.id;
-  tBoxes[index].className = "box uncoveredBlank";
-  tBoxes[index].textContent = tBoxVecs[index].status;
+  let value = tBoxVecs[index].status;
+  let text = tBoxes[index].textContent;
+  if (event.button === 0) {
+    tBoxes[index].className = "box uncovered";
+    tBoxes[index].textContent = tBoxVecs[index].status;
+    
+    if (tBoxVecs[index].status !== "💣") {
+      //console.log(tBoxVecs[index].status !== "💣");
+      clearBoxesOnClick(index);
+    }
+  }
+  /* if (event.button === 2) {
+    text === "⚑" ? tBoxes[index].textContent = "⚑" : tBoxes[index].textContent = "";
+  } */
   event.preventDefault();
 }
+
+tBoxes.forEach( x => {
+  x.addEventListener("mousedown", boxClick);
+});
+
