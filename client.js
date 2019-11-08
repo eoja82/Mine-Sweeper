@@ -1,4 +1,4 @@
-let width = 10, height = 10, size = 25, mines = 15;
+let width = 20, height = 20, size = 25, mines = 15;
 let tBoxes = [], tBoxVecs = [];
 
 class Vec {
@@ -51,7 +51,7 @@ function randomMines() {
   generateMines();
 }
 randomMines();
-console.log(tBoxVecs);
+//console.log(tBoxVecs);
 
 function findBombs(x, y, i) {
   let bombs = 0
@@ -90,24 +90,48 @@ bombsNearby();
 function clearBoxesOnClick(index) {
   let x = tBoxVecs[index].x;
   let y = tBoxVecs[index].y;
-  for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
-    for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
-      let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
-      //console.log("testBox.status " + testBox.status);
-      if (testBox.status === "💣") {
-        //console.log("continue " + x1 + ": " + y1);
-        continue;
-      } else if (typeof testBox.status === "number") {
-        //console.log("number: " + x1 + ": " + y1);
-        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
-        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
-      } else {
-        //console.log("else " + x1 + ": " + y1);
-        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
-        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
+  let clickedStatus = tBoxVecs[index].status;
+  let boxesToClear = [];
+
+  function clearBoxes(x, y) {
+    for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
+      for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
+        let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+        //console.log("testBox.status " + testBox.status);
+        if (testBox.status === "💣") {
+          //console.log("continue " + x1 + ": " + y1);
+          continue;
+        } else {
+          //console.log("else " + x1 + ": " + y1);
+          tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
+          tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
+        }
       }
     }
   }
+
+  function findEmptyBox(x, y) {
+    let empty = [];
+    for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
+      for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
+        let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+        let emptyBox = tBoxVecs[tBoxesIndex(x, y)];
+        if (testBox.status === "" && testBox !== emptyBox) {
+          empty.push([x1, y1]);
+        } 
+      }
+    }
+    console.log("empty: " + empty);
+    console.log("boxesToclear: " + boxesToClear);
+    let recEmpty = empty;
+    empty = []; 
+    console.log("recEmpty: " + recEmpty);
+    console.log("empty: " + empty);
+    //recEmpty.forEach( ([x, y]) => findEmptyBox(x, y));
+    boxesToClear.forEach( ([x, y]) => clearBoxes(x, y));
+  }
+  
+  if (clickedStatus === "") findEmptyBox(x, y);
 }
 
 // need to fix here right click flags
@@ -119,15 +143,13 @@ function boxClick(event) {
   if (event.button === 0) {
     tBoxes[index].className = "box uncovered";
     tBoxes[index].textContent = tBoxVecs[index].status;
-    
-    if (tBoxVecs[index].status !== "💣") {
-      //console.log(tBoxVecs[index].status !== "💣");
-      clearBoxesOnClick(index);
-    }
+    if (tBoxVecs[index].status === "💣") console.log("Game Over");
+    if (tBoxVecs[index].status === "") clearBoxesOnClick(index);
   }
-  /* if (event.button === 2) {
-    text === "⚑" ? tBoxes[index].textContent = "⚑" : tBoxes[index].textContent = "";
-  } */
+  if (event.button === 2) {
+    console.log(" right click");
+    text === "⚑" ? tBoxes[index].textContent = "" : tBoxes[index].textContent = "⚑";
+  }
   event.preventDefault();
 }
 
