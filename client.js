@@ -87,64 +87,63 @@ function bombsNearby() {
 }
 bombsNearby();
 
-function clearBoxesOnClick(index) {
-  let x = tBoxVecs[index].x;
-  let y = tBoxVecs[index].y;
-  let clickedStatus = tBoxVecs[index].status;
-  let boxesToClear = [];
-
-  function clearBoxes(x, y) {
-    for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
-      for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
-        let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
-        //console.log("testBox.status " + testBox.status);
-        if (testBox.status === "💣") {
-          //console.log("continue " + x1 + ": " + y1);
-          continue;
-        } else {
-          //console.log("else " + x1 + ": " + y1);
-          tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
-          tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
-        }
+let boxesToClear = [];
+function findEmptyBox(x, y) {
+  let empty = []; 
+  for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
+    for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
+      let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+      let emptyBox = tBoxVecs[tBoxesIndex(x, y)];
+      if (testBox.status === "" && testBox !== emptyBox) {
+        empty.push([x1, y1]);
+      } else if (testBox === emptyBox) {
+        boxesToClear.push([x1, y1]);
       }
     }
   }
+  return empty;
+}
 
-  function findEmptyBox(x, y) {
-    let empty = [];
-    for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
-      for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
-        let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
-        let emptyBox = tBoxVecs[tBoxesIndex(x, y)];
-        if (testBox.status === "" && testBox !== emptyBox) {
-          empty.push([x1, y1]);
-        } 
+function clearBoxes(x, y) {
+  for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
+    for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
+      let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
+      //console.log("testBox.status " + testBox.status);
+      if (testBox.status === "💣") {
+        //console.log("continue " + x1 + ": " + y1);
+        continue;
+      } else {
+        //console.log("else " + x1 + ": " + y1);
+        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
+        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
       }
     }
-    console.log("empty: " + empty);
-    console.log("boxesToclear: " + boxesToClear);
-    let recEmpty = empty;
-    empty = []; 
-    console.log("recEmpty: " + recEmpty);
-    console.log("empty: " + empty);
-    //recEmpty.forEach( ([x, y]) => findEmptyBox(x, y));
-    boxesToClear.forEach( ([x, y]) => clearBoxes(x, y));
   }
-  
-  if (clickedStatus === "") findEmptyBox(x, y);
+}
+
+function uncover(x, y) {
+  let index = tBoxesIndex(x, y);
+  tBoxes[index].className = "box uncovered"; 
+  tBoxes[index].textContent = tBoxVecs[index].status;
+  if (tBoxVecs[index].status === "💣") console.log("Game Over");
+  if (tBoxVecs[index].status === "") {
+    let empty = findEmptyBox(x, y);
+    if (empty.length > 0) {
+      //empty.forEach( ([x, y]) => uncover(x, y));
+    }
+  }
+  boxesToClear.forEach( ([x, y]) => clearBoxes(x, y));
 }
 
 // need to fix here right click flags
 function boxClick(event) {
   //console.log(event);
   let index = event.srcElement.id;
-  let value = tBoxVecs[index].status;
+  let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
   let text = tBoxes[index].textContent;
+
   if (event.button === 0) {
-    tBoxes[index].className = "box uncovered";
-    tBoxes[index].textContent = tBoxVecs[index].status;
-    if (tBoxVecs[index].status === "💣") console.log("Game Over");
-    if (tBoxVecs[index].status === "") clearBoxesOnClick(index);
+    uncover(x, y);
   }
   if (event.button === 2) {
     console.log(" right click");
