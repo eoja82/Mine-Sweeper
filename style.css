@@ -1,8 +1,14 @@
-#grid {
+#grid, #scoreboard {
   display: block;
-  /* border: 1px solid black; */
+  border: 3px solid rgb(71, 70, 70);
   margin-left: auto;
   margin-right: auto;
+}
+.scoreboard {
+  display: inline;
+}
+.scoreboardText {
+  text-align: right;
 }
 .row {
   margin: 0;

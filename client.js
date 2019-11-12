@@ -1,4 +1,4 @@
-let width = 20, height = 20, size = 25, mines = 25;
+let width = 15, height = 15, size = 25, mines = 15;
 let tBoxes = [], tBoxVecs = [];
 
 class Vec {
@@ -8,26 +8,20 @@ class Vec {
     //this.status = status;
   }
 }
+let smileyFace = document.getElementById("smileyFace");
+
+let scoreboardId = document.getElementById("scoreboard");
+scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "px;";
+
+let minesRemaining = document.getElementById("minesRemaining");
+minesRemaining.value = mines;
+
+let scoreboardClass = document.getElementsByClassName("scoreboard");
+scoreboardClass.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
 
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
-// create grid as table
-for (let y = 0; y < height; y++) {
-  let tRow = document.createElement("tr");
-  tRow.className = "row";
-  tRow.style = "width: " + width * size + "px; height: " + size + "px; display: block;";
-  for (let x = 0; x < width; x++) {
-    let tBox = document.createElement("td");
-    tBox.textContent = "";
-    tBox.id = x + (y * width);
-    tBox.className = "box covered";
-    tBox.style = "width: " + size + "px;  height: " + size + "px;";
-    tRow.appendChild(tBox);
-    tBoxes.push(tBox);
-    tBoxVecs.push(new Vec(x, y));
-  }
-  grid.appendChild(tRow);
-}
+
 // lookup index number
 function tBoxesIndex(x1, y1) {
   let index; 
@@ -35,6 +29,36 @@ function tBoxesIndex(x1, y1) {
     if (z.x === x1 && z.y === y1) index = i;
   });
   return index;
+}
+
+// function to find subarray in array
+function findArray(arr, [x1, y1]) {
+  let index = -1;
+  arr.forEach( ([x, y], i) => {
+    //console.log(`x: ${x}: x1: ${x1}, y: ${y}: y1 ${y1}`);
+    if (x === x1 && y === y1) index = i;
+  });
+  return index;
+}
+
+function createGrid() {
+  // create grid as table
+  for (let y = 0; y < height; y++) {
+    let tRow = document.createElement("tr");
+    tRow.className = "row";
+    tRow.style = "width: " + width * size + "px; height: " + size + "px; display: block;";
+    for (let x = 0; x < width; x++) {
+    let tBox = document.createElement("td");
+      tBox.textContent = "";
+      tBox.id = x + (y * width);
+      tBox.className = "box covered";
+      tBox.style = "width: " + size + "px;  height: " + size + "px;";
+      tRow.appendChild(tBox);
+      tBoxes.push(tBox);
+      tBoxVecs.push(new Vec(x, y));
+    }
+    grid.appendChild(tRow);
+  }
 }
 
 function randomMines() {
@@ -51,7 +75,6 @@ function randomMines() {
   }
   generateMines();
 }
-randomMines();
 
 function findBombs(x, y, i) {
   let bombs = 0
@@ -83,15 +106,12 @@ function bombsNearby() {
     }
   });
 }
-bombsNearby();
-// function to find subarray in array
-function findArray(arr, [x1, y1]) {
-  let index = -1;
-  arr.forEach( ([x, y], i) => {
-    //console.log(`x: ${x}: x1: ${x1}, y: ${y}: y1 ${y1}`);
-    if (x === x1 && y === y1) index = i;
+
+function addMouseListener() {
+  tBoxes.forEach( x => {
+    console.log("addEventListener");
+    x.addEventListener("mousedown", boxClick);
   });
-  return index;
 }
 
 function clearBoxes(x, y) {
@@ -129,7 +149,7 @@ function findEmpties(x, y) {
   return empties;
 }
 
-// this can be refractored
+// this can be refractored maybe
 let boxesToClear = [];
 function uncover(x, y, index) {
   if (typeof tBoxVecs[index].status === "number") {
@@ -157,7 +177,6 @@ function uncover(x, y, index) {
   }
 }
 
-// need to fix here right click flags
 function boxClick(event) {
   //console.log(event);
   let index = event.srcElement.id;
@@ -167,8 +186,9 @@ function boxClick(event) {
   if (event.button === 0 && !flagged) {
     if (tBoxVecs[index].status === "💣") {
       console.log("Game Over"); 
+      smileyFace.value = "🙁";
       tBoxVecs.forEach( (x, i) => {
-        if (x.status === "💣") {
+        if (x.status === "💣" && !x.flagged) {
           tBoxes[i].className = "box uncovered"; 
           tBoxes[i].textContent = tBoxVecs[i].status;
         }
@@ -181,16 +201,39 @@ function boxClick(event) {
     if (flagged && tBoxes[index].className !== "box uncovered") {
       tBoxes[index].textContent = "";
       tBoxVecs[index].flagged = false;
-    } else if (!flagged && tBoxes[index].className !== "box uncovered") {
+      minesRemaining.value++;
+    } else if (!flagged && tBoxes[index].className !== "box uncovered" && minesRemaining.value > 0) {
       tBoxes[index].textContent = "⚑";
       tBoxes[index].className = "box covered red";
       tBoxVecs[index].flagged = true;
+      minesRemaining.value--;
     }
   }
   event.preventDefault();
 }
 
-tBoxes.forEach( x => {
-  x.addEventListener("mousedown", boxClick);
-});
+function newGame() {
+  if (grid.firstChild) {
+    console.log("removing children");
+    while (grid.firstChild) {
+      grid.firstChild.remove();
+    }
+    tBoxes = [], tBoxVecs = [];
+  }
+  createGrid();
+  console.log("grid created")
+  randomMines();
+  console.log("random mines");
+  bombsNearby();
+  console.log("bombs nearby");
+  console.log(tBoxes);
+  addMouseListener();
+}
+newGame();
 
+function reset() {
+  smileyFace.value = "😀";
+  newGame();
+  //window.location.reload();
+}
+smileyFace.addEventListener("click", reset);
