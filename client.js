@@ -99,7 +99,7 @@ function clearBoxes(x, y) {
     for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
       let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
       //console.log("testBox.status " + testBox.status);
-      if (testBox.status === "💣") {
+      if (testBox.status === "💣" || testBox.flagged) {
         //console.log("continue " + x1 + ": " + y1);
         continue;
       } else {
@@ -162,9 +162,9 @@ function boxClick(event) {
   //console.log(event);
   let index = event.srcElement.id;
   let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
-  let text = tBoxes[index].textContent;
+  let flagged = tBoxVecs[index].flagged;
 
-  if (event.button === 0) {
+  if (event.button === 0 && !flagged) {
     if (tBoxVecs[index].status === "💣") {
       console.log("Game Over"); 
       tBoxVecs.forEach( (x, i) => {
@@ -178,8 +178,14 @@ function boxClick(event) {
     }
   }
   if (event.button === 2) {
-    console.log("right click");
-    text === "⚑" ? tBoxes[index].textContent = "" : tBoxes[index].textContent = "⚑";
+    if (flagged && tBoxes[index].className !== "box uncovered") {
+      tBoxes[index].textContent = "";
+      tBoxVecs[index].flagged = false;
+    } else if (!flagged && tBoxes[index].className !== "box uncovered") {
+      tBoxes[index].textContent = "⚑";
+      tBoxes[index].className = "box covered red";
+      tBoxVecs[index].flagged = true;
+    }
   }
   event.preventDefault();
 }

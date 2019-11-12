@@ -10,8 +10,7 @@
 }
 .box {
   box-sizing: border-box;
-  border: 3px solid black;
-  border-style: outset;
+  border: 3px outset rgb(112, 108, 108);
   text-align: center;
   vertical-align: middle;
   padding: 0;
@@ -24,4 +23,7 @@
   background-color: rgb(184, 181, 181);
   border: 1px solid black;
 }
-
+.red {
+  color: red;
+  text-shadow: 2px 2px black;
+}
