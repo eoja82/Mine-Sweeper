@@ -1,4 +1,4 @@
-let width = 20, height = 20, size = 25, mines = 15;
+let width = 20, height = 20, size = 25, mines = 25;
 let tBoxes = [], tBoxVecs = [];
 
 class Vec {
@@ -167,8 +167,12 @@ function boxClick(event) {
   if (event.button === 0) {
     if (tBoxVecs[index].status === "💣") {
       console.log("Game Over"); 
-      tBoxes[index].className = "box uncovered"; 
-      tBoxes[index].textContent = tBoxVecs[index].status;
+      tBoxVecs.forEach( (x, i) => {
+        if (x.status === "💣") {
+          tBoxes[i].className = "box uncovered"; 
+          tBoxes[i].textContent = tBoxVecs[i].status;
+        }
+      });
     } else {
       uncover(x, y, index); 
     }
