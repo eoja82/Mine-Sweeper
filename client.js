@@ -1,5 +1,6 @@
 let width = 15, height = 15, size = 25, mines = 15;
 let tBoxes = [], tBoxVecs = [];
+let playing = false;
 
 class Vec {
   constructor(x, y) {
@@ -14,10 +15,11 @@ let scoreboardId = document.getElementById("scoreboard");
 scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "px;";
 
 let minesRemaining = document.getElementById("minesRemaining");
-minesRemaining.value = mines;
 
 let scoreboardClass = document.getElementsByClassName("scoreboard");
 scoreboardClass.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
+
+let timer = document.getElementById("timer");
 
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
@@ -60,7 +62,7 @@ function createGrid() {
     grid.appendChild(tRow);
   }
 }
-
+// NEED TO FIX PUTS OUT TOO MANY MINES
 function randomMines() {
   let totalMines = 0, i = 0;
   function generateMines() {
@@ -109,7 +111,7 @@ function bombsNearby() {
 
 function addMouseListener() {
   tBoxes.forEach( x => {
-    console.log("addEventListener");
+    //console.log("addEventListener");
     x.addEventListener("mousedown", boxClick);
   });
 }
@@ -177,7 +179,22 @@ function uncover(x, y, index) {
   }
 }
 
+let start = null;
+function startStopTimer(value) {
+  if (value) {
+    start = setInterval(function() {
+      timer.value++;
+    }, 1000);
+  } else {
+    clearInterval(start);
+  }
+}
+
 function boxClick(event) {
+  if (!playing) {
+    playing = true;
+    startStopTimer(true);
+  }
   //console.log(event);
   let index = event.srcElement.id;
   let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
@@ -187,6 +204,8 @@ function boxClick(event) {
     if (tBoxVecs[index].status === "💣") {
       console.log("Game Over"); 
       smileyFace.value = "🙁";
+      playing = false;
+      startStopTimer(false);
       tBoxVecs.forEach( (x, i) => {
         if (x.status === "💣" && !x.flagged) {
           tBoxes[i].className = "box uncovered"; 
@@ -214,26 +233,25 @@ function boxClick(event) {
 
 function newGame() {
   if (grid.firstChild) {
-    console.log("removing children");
     while (grid.firstChild) {
       grid.firstChild.remove();
     }
     tBoxes = [], tBoxVecs = [];
+    minesRemaining.value = mines;
+    //console.log("timer.value: " + timer.value);
   }
   createGrid();
-  console.log("grid created")
   randomMines();
-  console.log("random mines");
   bombsNearby();
-  console.log("bombs nearby");
-  console.log(tBoxes);
   addMouseListener();
+  smileyFace.value = "😀";
+  timer.value = 0;
+  playing = false;
 }
 newGame();
 
 function reset() {
-  smileyFace.value = "😀";
+  
   newGame();
-  //window.location.reload();
 }
 smileyFace.addEventListener("click", reset);
