@@ -10,7 +10,8 @@
 }
 .box {
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 3px solid black;
+  border-style: outset;
   text-align: center;
   vertical-align: middle;
   padding: 0;
@@ -21,5 +22,6 @@
 }
 .uncovered {
   background-color: rgb(184, 181, 181);
+  border: 1px solid black;
 }
 
