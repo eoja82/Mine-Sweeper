@@ -11,7 +11,7 @@ class Vec {
 
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
-
+// create grid as table
 for (let y = 0; y < height; y++) {
   let tRow = document.createElement("tr");
   tRow.className = "row";
@@ -28,7 +28,7 @@ for (let y = 0; y < height; y++) {
   }
   grid.appendChild(tRow);
 }
-
+// lookup index number
 function tBoxesIndex(x1, y1) {
   let index; 
   tBoxVecs.forEach( (z, i) => {
@@ -38,20 +38,20 @@ function tBoxesIndex(x1, y1) {
 }
 
 function randomMines() {
-  let totalMines = 0;
+  let totalMines = 0, i = 0;
   function generateMines() {
-    for (let i = 0; i < tBoxVecs.length; i++) {
-      if (Math.random() < 0.1 && totalMines < mines && tBoxVecs[i].status !== "💣") {
+    for (i; i < tBoxVecs.length; i++) {
+      if (Math.random() < 0.1) {
         tBoxVecs[i].status = "💣";
         totalMines++;
       }
     }
+    // if not enough mines placed
     if (totalMines < mines) generateMines();
   }
   generateMines();
 }
 randomMines();
-//console.log(tBoxVecs);
 
 function findBombs(x, y, i) {
   let bombs = 0
@@ -72,21 +72,19 @@ function findBombs(x, y, i) {
   }
   return bombs;
 }
-
+// set status of each tBoxes to number of bombs nearby
 function bombsNearby() {
   tBoxVecs.map( ({x, y, status}, i) => {
-    //console.log("status: " + status);
     if (status === "💣") {
       tBoxVecs[i].status = status;
     } else {
       let bombs = findBombs(x, y, i);
-      //console.log("bombs: " + bombs);
       bombs === 0 ? tBoxVecs[i].status = "" : tBoxVecs[i].status = bombs;
     }
   });
 }
 bombsNearby();
-
+// function to find subarray in array
 function findArray(arr, [x1, y1]) {
   let index = -1;
   arr.forEach( ([x, y], i) => {
