@@ -20,7 +20,51 @@
     </div>
   </div>
   <div id="grid" oncontextmenu="return false;"></div>
-
+  <h4>Create your own game board!</h4>
+  <div id="gameOptions">
+    <div class="gameWidth">
+      <label for="width">Width: 
+        <select name="width" id="selectGameWidth">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+        </select>
+      </label>
+    </div>
+    <div class="gameHeight">
+      <label for="height"> Height:
+        <select name="height" id="selectGameHeight">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+        </select>
+      </label>
+    </div>
+    <div class="gameMines">
+      <label for="mines"> Mines:
+        <select name="mines" id="selectGameMines">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+        </select>
+      </label>
+    </div>
+    <div class="reset">
+      <button id="userGame">Reset</button>
+    </div>
+  </div>
 <script src="client.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-let width = 15, height = 15, size = 25, mines = 5, boxesCleared = 0;
+let width = 15, height = 15, size = 25, mines = 15, boxesCleared = 0;
 let tBoxes = [], tBoxVecs = []; //tBoxVecs = [{x, y}, {status}, {flagged}, {cleared}];
 let playing = false;
 
@@ -16,7 +16,6 @@ scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "p
 let minesRemaining = document.getElementById("minesRemaining");
 
 let scoreboardClass = document.querySelectorAll(".scoreboard");
-
 scoreboardClass.forEach( x => {
   x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
 });
@@ -25,6 +24,8 @@ let timer = document.getElementById("timer");
 
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
+
+let userGame = document.getElementById("userGame");
 
 // lookup index number
 function tBoxesIndex(x1, y1) {
@@ -257,7 +258,7 @@ function newGame() {
       grid.firstChild.remove();
     }
     tBoxes = [], tBoxVecs = [], boxesToClear = [], boxesCleared = 0;
-    minesRemaining.textContent = mines;
+    
     //console.log("timer.value: " + timer.value);
   }
   createGrid();
@@ -266,6 +267,7 @@ function newGame() {
   addMouseListener();
   smileyFace.textContent = "😀";
   timer.textContent = 0;
+  minesRemaining.textContent = mines;
   playing = false;
 }
 newGame();
@@ -274,3 +276,19 @@ function reset() {
   newGame();
 }
 smileyFace.addEventListener("click", reset);
+
+function createUserGame() {
+  clearInterval(start);
+  playing = false;
+  width = parseInt(document.getElementById("selectGameWidth").value);
+  height = parseInt(document.getElementById("selectGameHeight").value);
+  mines = parseInt(document.getElementById("selectGameMines").value);
+  grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
+  scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "px;";
+  scoreboardClass.forEach( x => {
+    x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
+  });
+  newGame();
+}
+
+userGame.addEventListener("click", createUserGame);

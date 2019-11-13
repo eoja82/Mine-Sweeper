@@ -47,3 +47,15 @@
   color: red;
   text-shadow: 2px 2px black;
 }
+h4 {
+  text-align: center;
+}
+#gameOptions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.gameWidth, .gameHeight, .gameMines {
+  display: flex;
+  flex-direction: row;
+}
