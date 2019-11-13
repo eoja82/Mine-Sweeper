@@ -1,4 +1,4 @@
-let width = 15, height = 15, size = 25, mines = 15;
+let width = 15, height = 15, size = 25, mines = 20;
 let tBoxes = [], tBoxVecs = [];
 let playing = false;
 
@@ -62,20 +62,18 @@ function createGrid() {
     grid.appendChild(tRow);
   }
 }
-// NEED TO FIX PUTS OUT TOO MANY MINES
-function randomMines() {
-  let totalMines = 0, i = 0;
-  function generateMines() {
-    for (i; i < tBoxVecs.length; i++) {
-      if (Math.random() < 0.1) {
-        tBoxVecs[i].status = "💣";
-        totalMines++;
-      }
+
+function randomMines(mines) {
+  let i = 0;
+  for (i; i < mines; i++) {
+    let index = Math.floor(Math.random() * (width * height));
+    if (tBoxVecs[index].status === "💣") {
+      i--;
+      continue;
+    } else {
+      tBoxVecs[index].status = "💣";
     }
-    // if not enough mines placed
-    if (totalMines < mines) generateMines();
   }
-  generateMines();
 }
 
 function findBombs(x, y, i) {
@@ -241,7 +239,7 @@ function newGame() {
     //console.log("timer.value: " + timer.value);
   }
   createGrid();
-  randomMines();
+  randomMines(mines);
   bombsNearby();
   addMouseListener();
   smileyFace.value = "😀";
