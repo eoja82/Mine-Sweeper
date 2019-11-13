@@ -1,14 +1,28 @@
-#grid, #scoreboard {
+#grid {
   display: block;
   border: 3px solid rgb(71, 70, 70);
   margin-left: auto;
   margin-right: auto;
 }
+#scoreboard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  justify-content: center;
+  align-content: center;
+  border: 3px solid rgb(71, 70, 70);
+  margin-left: auto;
+  margin-right: auto;
+}
 .scoreboard {
-  display: inline;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(112, 108, 108);
+  border: 3px solid rgb(77, 75, 75);
 }
 .scoreboardText {
-  text-align: right;
+  font-size: 1.7em;
 }
 .row {
   margin: 0;

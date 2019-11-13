@@ -15,8 +15,11 @@ scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "p
 
 let minesRemaining = document.getElementById("minesRemaining");
 
-let scoreboardClass = document.getElementsByClassName("scoreboard");
-scoreboardClass.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
+let scoreboardClass = document.querySelectorAll(".scoreboard");
+
+scoreboardClass.forEach( x => {
+  x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
+});
 
 let timer = document.getElementById("timer");
 
@@ -164,6 +167,7 @@ function uncover(x, y, index) {
   let startSlice = boxesToClear.length;
   let added = 0;
   let empties = findEmpties(x, y);
+  //console.log(`empties.length: ${empties.length}`)
   if (empties.length > 0) {
     empties.forEach( x => {
       if (findArray(boxesToClear, x) < 0) {
@@ -184,7 +188,7 @@ let start = null;
 function startStopTimer(bool) {
   if (bool) {
     start = setInterval(function() {
-      timer.value++;
+      timer.textContent++;
     }, 1000);
   } else {
     clearInterval(start);
@@ -193,7 +197,7 @@ function startStopTimer(bool) {
 
 function endGame() {
   console.log("Game Over"); 
-  smileyFace.value = "🙁";
+  smileyFace.textContent = "🙁";
   playing = false;
   startStopTimer(false);
   tBoxVecs.forEach( (x, i) => {
@@ -206,7 +210,7 @@ function endGame() {
 
 function winGame() {
   console.log("You Win");
-  smileyFace.value = "😎";
+  smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
 }
@@ -236,12 +240,12 @@ function boxClick(event) {
     if (flagged && tBoxes[index].className !== "box uncovered") {
       tBoxes[index].textContent = "";
       tBoxVecs[index].flagged = false;
-      minesRemaining.value++;
-    } else if (!flagged && tBoxes[index].className !== "box uncovered" && minesRemaining.value > 0) {
+      minesRemaining.textContent++;
+    } else if (!flagged && tBoxes[index].className !== "box uncovered" && minesRemaining.textContent > 0) {
       tBoxes[index].textContent = "⚑";
       tBoxes[index].className = "box covered red";
       tBoxVecs[index].flagged = true;
-      minesRemaining.value--;
+      minesRemaining.textContent--;
     }
   }
   event.preventDefault();
@@ -252,16 +256,16 @@ function newGame() {
     while (grid.firstChild) {
       grid.firstChild.remove();
     }
-    tBoxes = [], tBoxVecs = [];
-    minesRemaining.value = mines;
+    tBoxes = [], tBoxVecs = [], boxesToClear = [], boxesCleared = 0;
+    minesRemaining.textContent = mines;
     //console.log("timer.value: " + timer.value);
   }
   createGrid();
   randomMines(mines);
   bombsNearby();
   addMouseListener();
-  smileyFace.value = "😀";
-  timer.value = 0;
+  smileyFace.textContent = "😀";
+  timer.textContent = 0;
   playing = false;
 }
 newGame();
