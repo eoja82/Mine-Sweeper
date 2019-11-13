@@ -1,12 +1,11 @@
-let width = 15, height = 15, size = 25, mines = 20;
-let tBoxes = [], tBoxVecs = [];
+let width = 15, height = 15, size = 25, mines = 5, boxesCleared = 0;
+let tBoxes = [], tBoxVecs = []; //tBoxVecs = [{x, y}, {status}, {flagged}, {cleared}];
 let playing = false;
 
 class Vec {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    //this.status = status;
   }
 }
 let smileyFace = document.getElementById("smileyFace");
@@ -123,8 +122,10 @@ function clearBoxes(x, y) {
         //console.log("continue " + x1 + ": " + y1);
         continue;
       } else {
+        testBox.cleared ? boxesCleared = boxesCleared : boxesCleared++;
         tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
         tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
+        testBox.cleared = true;
       }
     }
   }
@@ -154,8 +155,10 @@ let boxesToClear = [];
 function uncover(x, y, index) {
   if (typeof tBoxVecs[index].status === "number") {
     //console.log(`at typeof is number`);
+    tBoxVecs[index].cleared ? boxesCleared = boxesCleared : boxesCleared++;
     tBoxes[index].className = "box uncovered"; 
     tBoxes[index].textContent = tBoxVecs[index].status;
+    tBoxVecs[index].cleared = true;
     return;
   }
   let startSlice = boxesToClear.length;
@@ -178,14 +181,34 @@ function uncover(x, y, index) {
 }
 
 let start = null;
-function startStopTimer(value) {
-  if (value) {
+function startStopTimer(bool) {
+  if (bool) {
     start = setInterval(function() {
       timer.value++;
     }, 1000);
   } else {
     clearInterval(start);
   }
+}
+
+function endGame() {
+  console.log("Game Over"); 
+  smileyFace.value = "🙁";
+  playing = false;
+  startStopTimer(false);
+  tBoxVecs.forEach( (x, i) => {
+    if (x.status === "💣" && !x.flagged) {
+      tBoxes[i].className = "box uncovered"; 
+      tBoxes[i].textContent = tBoxVecs[i].status;
+    }
+  });
+}
+
+function winGame() {
+  console.log("You Win");
+  smileyFace.value = "😎";
+  playing = false;
+  startStopTimer(false);
 }
 
 function boxClick(event) {
@@ -200,18 +223,13 @@ function boxClick(event) {
 
   if (event.button === 0 && !flagged) {
     if (tBoxVecs[index].status === "💣") {
-      console.log("Game Over"); 
-      smileyFace.value = "🙁";
-      playing = false;
-      startStopTimer(false);
-      tBoxVecs.forEach( (x, i) => {
-        if (x.status === "💣" && !x.flagged) {
-          tBoxes[i].className = "box uncovered"; 
-          tBoxes[i].textContent = tBoxVecs[i].status;
-        }
-      });
+      endGame();
     } else {
       uncover(x, y, index); 
+      //console.log(`boxesCleared: ${boxesCleared}`);
+      if (boxesCleared === (width * height) - mines) {
+        winGame();
+      }
     }
   }
   if (event.button === 2) {
@@ -249,7 +267,6 @@ function newGame() {
 newGame();
 
 function reset() {
-  
   newGame();
 }
 smileyFace.addEventListener("click", reset);
