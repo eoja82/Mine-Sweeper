@@ -21,6 +21,8 @@ grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
 
 let userGame = document.getElementById("userGame");
 
+let howToPlay = document.getElementById("howToPlay");
+
 class Vec {
   constructor(x, y) {
     this.x = x;
@@ -295,3 +297,19 @@ function createUserGame() {
 }
 
 userGame.addEventListener("click", createUserGame);
+
+function instructions() {
+  let instructions = document.getElementById("instructions");
+  if (instructions.style.display === "none") {
+    instructions.style.display = "block";
+    howToPlay.textContent = "Hide Instructions";
+  } else {
+    instructions.style.display = "none";
+    howToPlay.textContent = "Show Instructions";
+  }
+}
+
+howToPlay.addEventListener("click", instructions);
+
+//end game at 999, add click counter?, click open square to clear all correctly flgged squares?
+//double right click to put question mark?

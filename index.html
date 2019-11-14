@@ -65,6 +65,45 @@
       <button id="userGame">Reset</button>
     </div>
   </div>
+  <div class="howTo">
+    <button id="howToPlay">Show Instructions</button>
+  </div>
+  <div id="instructions" style="display: none;">
+    <h3>Quick Start Instructions </h3>
+    <p>
+      You are presented with a board of squares.  Some squares contain mines (bombs), others don't.  If you click on a square containing a mine, you lose.  You win by "clearing" all the squares that do not contain a mine.
+    </p>
+    <p>
+      Left clicking a square that doesn't have a mine "clears" the square and reveals the number of adjacent squares containing mines.  If the square has no adjacent mines, that square will be blank and all blank squares radiating outward will be cleared until a square with an adjacent mine is revealed.  Use this information, to avoid the mines.
+    </p>
+    <p>
+      To mark/flag a square you think is a mine, right click on it.  To remove the flag right click the square again.
+    </p>
+    <h3>Additional Instructions</h3>
+    <p>
+      The first clicked square is never a mine.
+    </p>
+    <p>
+      Adjacent squares are those squares above, below, left, right, and on all 4 diagonals of the clicked square.
+    </p>
+    <p>
+      If you flag a mine incorrectly, you will have to remove the flag and clear the square before you can win.   You don't have to flag all the mines to win.  The flags are just a tool to help you remember where you think there is a mine.   To win you still need to clear all squares without mines.
+    </p>
+    <h3>Scoreboard Information</h3>
+    <p>
+      At the start of the game, the upper left corner indicate the number of hidden mines.  When you flag a square this number decreases by one (and increases by one if a flag is removed).  You cannot flag more squares than the number of mines on the board.
+    </p>
+    <p>
+      The upper right corner is a timer in seconds.  Try to clear the mines as fast as possible.  If the timer reaches 999 the game ends.
+    </p>
+    <p>
+      After you win or lose a game, click the yellow emoji face to start a new game. 
+    </p>
+    <h3>Create  Your Own Game Board</h3>
+    <p>
+      Choose the number of squares you want for the width and height, and the number of mines to hide.  Then click the Reset button.  Your choices determines the difficulty of clearing the board.
+    </p>
+  </div>
 <script src="client.js"></script>
 </body>
 </html>
