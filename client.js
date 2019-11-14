@@ -2,12 +2,6 @@ let width = 15, height = 15, size = 25, mines = 15, boxesCleared = 0;
 let tBoxes = [], tBoxVecs = []; //tBoxVecs = [{x, y}, {status}, {flagged}, {cleared}];
 let playing = false;
 
-class Vec {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-}
 let smileyFace = document.getElementById("smileyFace");
 
 let scoreboardId = document.getElementById("scoreboard");
@@ -26,6 +20,13 @@ let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
 
 let userGame = document.getElementById("userGame");
+
+class Vec {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
 
 // lookup index number
 function tBoxesIndex(x1, y1) {
@@ -217,15 +218,14 @@ function winGame() {
 }
 
 function boxClick(event) {
+  if (smileyFace.textContent !== "😀") return;
+  let index = event.srcElement.id;
+  let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
+  let flagged = tBoxVecs[index].flagged;
   if (!playing) {
     playing = true;
     startStopTimer(true);
   }
-  //console.log(event);
-  let index = event.srcElement.id;
-  let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
-  let flagged = tBoxVecs[index].flagged;
-
   if (event.button === 0 && !flagged) {
     if (tBoxVecs[index].status === "💣") {
       endGame();
@@ -278,8 +278,8 @@ function reset() {
 smileyFace.addEventListener("click", reset);
 
 function createUserGame() {
-  clearInterval(start);
-  playing = false;
+  /* clearInterval(start);
+  playing = false; */
   width = parseInt(document.getElementById("selectGameWidth").value);
   height = parseInt(document.getElementById("selectGameHeight").value);
   mines = parseInt(document.getElementById("selectGameMines").value);
