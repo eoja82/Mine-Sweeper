@@ -193,6 +193,9 @@ function startStopTimer(bool) {
   if (bool) {
     start = setInterval(function() {
       timer.textContent++;
+      if (timer.textContent == 999) {
+        gameOver();
+      }
     }, 1000);
   } else {
     clearInterval(start);
