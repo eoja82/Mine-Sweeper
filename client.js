@@ -67,11 +67,11 @@ function createGrid() {
   }
 }
 
-function randomMines(mines) {
+function randomMines(mines, firstClick) {
   let i = 0;
   for (i; i < mines; i++) {
     let index = Math.floor(Math.random() * (width * height));
-    if (tBoxVecs[index].status === "💣") {
+    if (tBoxVecs[index].status === "💣" || index == firstClick) {
       i--;
       continue;
     } else {
@@ -197,7 +197,7 @@ function startStopTimer(bool) {
   }
 }
 
-function endGame() {
+function gameOver() {
   console.log("Game Over"); 
   smileyFace.textContent = "🙁";
   playing = false;
@@ -223,15 +223,20 @@ function boxClick(event) {
   let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
   let flagged = tBoxVecs[index].flagged;
   if (!playing) {
+    randomMines(mines, index);
+    bombsNearby();
+    uncover(x, y, index);
+    if (boxesCleared === (width * height) - mines) {
+      winGame();
+    }
     playing = true;
     startStopTimer(true);
   }
   if (event.button === 0 && !flagged) {
     if (tBoxVecs[index].status === "💣") {
-      endGame();
+      gameOver();
     } else {
       uncover(x, y, index); 
-      //console.log(`boxesCleared: ${boxesCleared}`);
       if (boxesCleared === (width * height) - mines) {
         winGame();
       }
@@ -258,12 +263,8 @@ function newGame() {
       grid.firstChild.remove();
     }
     tBoxes = [], tBoxVecs = [], boxesToClear = [], boxesCleared = 0;
-    
-    //console.log("timer.value: " + timer.value);
   }
   createGrid();
-  randomMines(mines);
-  bombsNearby();
   addMouseListener();
   smileyFace.textContent = "😀";
   timer.textContent = 0;
@@ -273,13 +274,15 @@ function newGame() {
 newGame();
 
 function reset() {
-  newGame();
+  if (smileyFace.textContent !== "😀") {
+    newGame();
+  }
 }
 smileyFace.addEventListener("click", reset);
 
 function createUserGame() {
-  /* clearInterval(start);
-  playing = false; */
+  clearInterval(start);
+  //playing = false;
   width = parseInt(document.getElementById("selectGameWidth").value);
   height = parseInt(document.getElementById("selectGameHeight").value);
   mines = parseInt(document.getElementById("selectGameMines").value);
