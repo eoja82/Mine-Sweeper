@@ -1,27 +1,20 @@
-let width = 15, height = 15, size = 25, mines = 15, boxesCleared = 0;
+let width = 15, height = 15, size = 25, mines = 20, boxesCleared = 0;
 let tBoxes = [], tBoxVecs = []; //tBoxVecs = [{x, y}, {status}, {flagged}, {cleared}];
 let playing = false;
-
 let smileyFace = document.getElementById("smileyFace");
-
 let scoreboardId = document.getElementById("scoreboard");
 scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "px;";
-
 let minesRemaining = document.getElementById("minesRemaining");
-
 let scoreboardClass = document.querySelectorAll(".scoreboard");
 scoreboardClass.forEach( x => {
   x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
 });
-
 let timer = document.getElementById("timer");
-
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
-
 let userGame = document.getElementById("userGame");
-
 let howToPlay = document.getElementById("howToPlay");
+let scores = document.getElementById("scores");
 
 class Vec {
   constructor(x, y) {
@@ -43,7 +36,6 @@ function tBoxesIndex(x1, y1) {
 function findArray(arr, [x1, y1]) {
   let index = -1;
   arr.forEach( ([x, y], i) => {
-    //console.log(`x: ${x}: x1: ${x1}, y: ${y}: y1 ${y1}`);
     if (x === x1 && y === y1) index = i;
   });
   return index;
@@ -88,11 +80,9 @@ function findBombs(x, y, i) {
   for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
     for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
       let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
-      //console.log(`testBox: ${testBox.x}, ${testBox.y}, box: ${box.x} ${box.y}`)
       if (testBox === box) {
         continue;
       } else {
-        //console.log(`testBox.status === ${testBox.status === "💣"}`)
         if (testBox.status === "💣") {
           bombs++;
         }
@@ -115,7 +105,6 @@ function bombsNearby() {
 
 function addMouseListener() {
   tBoxes.forEach( x => {
-    //console.log("addEventListener");
     x.addEventListener("mousedown", boxClick);
   });
 }
@@ -124,9 +113,7 @@ function clearBoxes(x, y) {
   for (let y1 = Math.max(0, y - 1); y1 <= Math.min(height - 1, y + 1); y1++) {
     for (let x1 = Math.max(0, x - 1); x1 <= Math.min(width - 1, x + 1); x1++) {
       let testBox = tBoxVecs[tBoxesIndex(x1, y1)];
-      //console.log("testBox.status " + testBox.status);
       if (testBox.status === "💣" || testBox.flagged) {
-        //console.log("continue " + x1 + ": " + y1);
         continue;
       } else {
         testBox.cleared ? boxesCleared = boxesCleared : boxesCleared++;
@@ -157,11 +144,9 @@ function findEmpties(x, y) {
   return empties;
 }
 
-// this can be refractored maybe
 let boxesToClear = [];
 function uncover(x, y, index) {
   if (typeof tBoxVecs[index].status === "number") {
-    //console.log(`at typeof is number`);
     tBoxVecs[index].cleared ? boxesCleared = boxesCleared : boxesCleared++;
     tBoxes[index].className = "box uncovered"; 
     tBoxes[index].textContent = tBoxVecs[index].status;
@@ -171,7 +156,6 @@ function uncover(x, y, index) {
   let startSlice = boxesToClear.length;
   let added = 0;
   let empties = findEmpties(x, y);
-  //console.log(`empties.length: ${empties.length}`)
   if (empties.length > 0) {
     empties.forEach( x => {
       if (findArray(boxesToClear, x) < 0) {
@@ -180,10 +164,8 @@ function uncover(x, y, index) {
       }
     });
     let toCheckNext = boxesToClear.slice(startSlice, added + startSlice);
-    //console.log(`boxesToClear: ${boxesToClear}, toCheckNext: ${toCheckNext}`);
     toCheckNext.forEach( ([x, y]) => uncover(x, y, tBoxesIndex(x, y)));
   } else {
-    //console.log(`boxesToClear: ${boxesToClear}`);
     boxesToClear.forEach( ([x, y]) => clearBoxes(x, y));
   }
 }
@@ -220,6 +202,13 @@ function winGame() {
   smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
+   // for future score display
+  /* let score = document.createElement("p");
+  console.log(`score: ${score}`);
+  score.textContent = "Time: " + timer.textContent;
+  console.log(`textContent: ${score.textContent}`);
+  scores.appendChild(score);
+  console.log("scores: " + scores); */
 }
 
 function boxClick(event) {
@@ -314,5 +303,5 @@ function instructions() {
 
 howToPlay.addEventListener("click", instructions);
 
-//end game at 999, add click counter?, click open square to clear all correctly flgged squares?
+// add click counter?, click open square to clear all correctly flgged squares?
 //double right click to put question mark?
