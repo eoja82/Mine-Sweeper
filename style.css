@@ -9,6 +9,7 @@ header {
   border: 3px solid rgb(71, 70, 70);
   margin-left: auto;
   margin-right: auto;
+  cursor: default;
 }
 #scoreboard {
   display: flex;
@@ -29,6 +30,9 @@ header {
 }
 .scoreboardText {
   font-size: 1.7em;
+}
+#smileyFace {
+  cursor: pointer;
 }
 .row {
   margin: 0;
@@ -67,13 +71,11 @@ h4 {
 }
 .howTo {
   text-align: center;
-  margin-top: 3%;
+  margin: 3% 0;
 }
 #instructions {
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3%;
+  margin: 0 auto 3% auto;
   padding: 2%;
   background-color: rgb(255, 255, 255, .7);
 }
