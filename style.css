@@ -64,10 +64,16 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+  /* max-width: 50%; */
+  margin: 0 auto;
 }
 .gameWidth, .gameHeight, .gameMines {
-  display: flex;
-  flex-direction: row;
+  margin: 5px;
+}
+#userGame, #howToPlay {
+  font-size: .9rem;
+  border-radius: 5px;
 }
 .howTo {
   text-align: center;

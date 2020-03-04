@@ -1,4 +1,4 @@
-let width = 15, height = 15, size = 25, mines = 20, boxesCleared = 0;
+let width = 12, height = 12, size = 25, mines = 20, boxesCleared = 0;
 let tBoxes = [], tBoxVecs = []; //tBoxVecs = [{x, y}, {status}, {flagged}, {cleared}];
 let playing = false;
 let smileyFace = document.getElementById("smileyFace");
@@ -14,7 +14,6 @@ let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
 let userGame = document.getElementById("userGame");
 let howToPlay = document.getElementById("howToPlay");
-let scores = document.getElementById("scores");
 
 class Vec {
   constructor(x, y) {
@@ -41,8 +40,8 @@ function findArray(arr, [x1, y1]) {
   return index;
 }
 
+// create grid as table
 function createGrid() {
-  // create grid as table
   for (let y = 0; y < height; y++) {
     let tRow = document.createElement("tr");
     tRow.className = "row";
@@ -185,7 +184,6 @@ function startStopTimer(bool) {
 }
 
 function gameOver() {
-  console.log("Game Over"); 
   smileyFace.textContent = "🙁";
   playing = false;
   startStopTimer(false);
@@ -198,17 +196,9 @@ function gameOver() {
 }
 
 function winGame() {
-  console.log("You Win");
   smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
-   // for future score display
-  /* let score = document.createElement("p");
-  console.log(`score: ${score}`);
-  score.textContent = "Time: " + timer.textContent;
-  console.log(`textContent: ${score.textContent}`);
-  scores.appendChild(score);
-  console.log("scores: " + scores); */
 }
 
 function boxClick(event) {
@@ -276,7 +266,6 @@ smileyFace.addEventListener("click", reset);
 
 function createUserGame() {
   clearInterval(start);
-  //playing = false;
   width = parseInt(document.getElementById("selectGameWidth").value);
   height = parseInt(document.getElementById("selectGameHeight").value);
   mines = parseInt(document.getElementById("selectGameMines").value);
@@ -302,6 +291,3 @@ function instructions() {
 }
 
 howToPlay.addEventListener("click", instructions);
-
-// add click counter?, click open square to clear all correctly flgged squares?
-//double right click to put question mark?
