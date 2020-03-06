@@ -59,7 +59,7 @@ function createGrid() {
     tRow.className = "row";
     tRow.style = "width: " + width * size + "px; height: " + size + "px; display: block;";
     for (let x = 0; x < width; x++) {
-    let tBox = document.createElement("td");
+      let tBox = document.createElement("td");
       tBox.textContent = "";
       tBox.id = x + (y * width);
       tBox.className = "box covered";
