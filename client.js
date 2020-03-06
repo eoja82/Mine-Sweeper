@@ -3,6 +3,11 @@ let width = 12, height = 12,
     boxesCleared = 0,
     playing = false;
 
+const numberColor = {
+  1: "blue", 2: "green", 3: "red", 4: "purple", 5: "maroon",
+  6: "turquoise", 7: "black", 8: "gray"
+};
+
 // tBoxVecs will = [{x, y}, {status}, {flagged}, {cleared}];
 let tBoxes = [], tBoxVecs = []; 
 
@@ -75,9 +80,10 @@ function addMouseListener() {
 
 function boxClick(event) {
   if (smileyFace.textContent !== "😀") return;
-  let index = event.srcElement.id;
-  let x = tBoxVecs[index].x, y = tBoxVecs[index].y;
-  let flagged = tBoxVecs[index].flagged;
+  let index = event.srcElement.id,
+      x = tBoxVecs[index].x, 
+      y = tBoxVecs[index].y,
+      flagged = tBoxVecs[index].flagged;
   if (!playing) {
     randomMines(mines, index);
     bombsNearby();
@@ -99,13 +105,14 @@ function boxClick(event) {
     }
   }
   if (event.button === 2) {
-    if (flagged && tBoxes[index].className !== "box uncovered") {
+    if (flagged && tBoxes[index].classList.contains("covered")) {
       tBoxes[index].textContent = "";
+      tBoxes[index].classList.remove("redFlag");
       tBoxVecs[index].flagged = false;
       minesRemaining.textContent++;
-    } else if (!flagged && tBoxes[index].className !== "box uncovered" && minesRemaining.textContent > 0) {
+    } else if (!flagged && tBoxes[index].classList.contains("covered") && minesRemaining.textContent > 0) {
       tBoxes[index].textContent = "⚑";
-      tBoxes[index].className = "box covered red";
+      tBoxes[index].classList.add("redFlag");
       tBoxVecs[index].flagged = true;
       minesRemaining.textContent--;
     }
@@ -160,10 +167,7 @@ function findBombs(x, y, i) {
 let boxesToClear = [];
 function uncover(x, y, index) {
   if (typeof tBoxVecs[index].status === "number") {
-    tBoxVecs[index].cleared ? boxesCleared = boxesCleared : boxesCleared++;
-    tBoxes[index].className = "box uncovered"; 
-    tBoxes[index].textContent = tBoxVecs[index].status;
-    tBoxVecs[index].cleared = true;
+    update_tBox(index);
     return;
   }
   let startSlice = boxesToClear.length;
@@ -209,13 +213,18 @@ function clearBoxes(x, y) {
       if (testBox.status === "💣" || testBox.flagged) {
         continue;
       } else {
-        testBox.cleared ? boxesCleared = boxesCleared : boxesCleared++;
-        tBoxes[tBoxesIndex(x1, y1)].className = "box uncovered";
-        tBoxes[tBoxesIndex(x1, y1)].textContent = testBox.status;
-        testBox.cleared = true;
+        update_tBox(tBoxesIndex(x1, y1));
       }
     }
   }
+}
+
+function update_tBox(index) {
+  tBoxVecs[index].cleared ? boxesCleared = boxesCleared : boxesCleared++;
+  tBoxes[index].classList.replace("covered", "uncovered"); 
+  tBoxes[index].textContent = tBoxVecs[index].status;
+  tBoxes[index].classList.add(numberColor[tBoxVecs[index].status]);
+  tBoxVecs[index].cleared = true;
 }
 
 let start = null;
@@ -238,7 +247,7 @@ function gameOver() {
   startStopTimer(false);
   tBoxVecs.forEach( (x, i) => {
     if (x.status === "💣" && !x.flagged) {
-      tBoxes[i].className = "box uncovered"; 
+      tBoxes[i].classList.replace("covered", "uncovered"); 
       tBoxes[i].textContent = tBoxVecs[i].status;
     }
   });
