@@ -2,7 +2,7 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  background-color: rgb(198, 198, 202);
+  background-color: rgb(206, 206, 206);
 }
 header {
   text-align: center;
@@ -99,7 +99,16 @@ h4 {
 }
 #userGame, #howToPlay {
   font-size: .9rem;
+  color: white;
   border-radius: 5px;
+}
+#userGame {
+  background-color: #007bff;
+  border: 1px solid #007bff;
+}
+#howToPlay {
+  background-color: #17a2b8;
+  border: 1px solid #17a2b8;
 }
 .howTo {
   text-align: center;
