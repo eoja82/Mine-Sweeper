@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="../public/style.css">
 </head>
 <body>
+  <div id="loginContainer">
+    <button id="login">Log In</button>
+  </div>
   <header>
     <h1>Minesweeper Beta</h1>
   </header>
@@ -107,6 +110,33 @@
       Select the number of squares you want for the width and height, and the number of mines to hide.  Then click the Reset button.  Your choices determines the difficulty of clearing the board.
     </p>
   </div>
+
+  <!-- login modal -->
+  <div id="loginModal">
+    <div class="modalContent">
+      <div class="modalHeader">
+        <h3>Log in to save your best scores and get on the leader board!</h3>
+      </div>
+      <form id="loginForm" action="/login" method="post">
+        <div>
+            <input type="text" name="username" placeholder="Username"/>
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="Password"/>
+        </div>
+        <div>
+            <input type="submit" value="Log In"/>
+        </div>
+      </form>
+      <div>
+        <button id="createAccount">Create A New Account</button>
+      </div>
+      <div>
+        <button id="noAccount">Play Without An Account</button>
+      </div>
+    </div>
+  </div>
   <script src="../public/client.js"></script>
+  <script src="../public/login.js"></script>
 </body>
 </html>
