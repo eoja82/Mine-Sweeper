@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Mine Sweeper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../public/style.css">
 </head>
 <body>
-  <div id="loginContainer">
-    <button id="login">Log In</button>
-  </div>
+  <nav class="nav"></nav>
   <header>
     <h1>Minesweeper Beta</h1>
   </header>
@@ -29,47 +30,44 @@
   <h4>Create your own game board!</h4>
   <div id="gameOptions">
     <div class="gameWidth">
-      <label for="width">Width: 
-        <select name="width" id="selectGameWidth">
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="15" selected>15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="35">35</option>
-        </select>
-      </label>
+      <label for="width">Width:</label>
+      <select name="width" id="selectGameWidth">
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15" selected>15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="35">35</option>
+      </select>
     </div>
     <div class="gameHeight">
-      <label for="height"> Height:
-        <select name="height" id="selectGameHeight">
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="15" selected>15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="35">35</option>
-        </select>
-      </label>
+      <label for="height"> Height:</label>
+      <select name="height" id="selectGameHeight">
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15" selected>15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="35">35</option>
+      </select>
     </div>
     <div class="gameMines">
-      <label for="mines"> Mines:
-        <select name="mines" id="selectGameMines">
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="15" selected>15</option>
-          <option value="20">20</option>
-          <option value="25">25</option>
-          <option value="30">30</option>
-          <option value="35">35</option>
-          <option value="45">45</option>
-          <option value="60">60</option>
-          <option value="75">75</option>
-          <option value="99">99</option>
-        </select>
-      </label>
+      <label for="mines"> Mines:</label>
+      <select name="mines" id="selectGameMines">
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15" selected>15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="35">35</option>
+        <option value="45">45</option>
+        <option value="60">60</option>
+        <option value="75">75</option>
+        <option value="99">99</option>
+      </select>
     </div>
     <div class="reset">
       <button id="userGame">Reset</button>
@@ -129,13 +127,15 @@
         </div>
       </form>
       <div>
-        <button id="createAccount">Create A New Account</button>
+        <button id="createAccount"><a href="/createaccount">Create A New Account</a></button>
       </div>
       <div>
         <button id="noAccount">Play Without An Account</button>
       </div>
     </div>
   </div>
+
+  <script src="../public/components/nav.js"></script>
   <script src="../public/client.js"></script>
   <script src="../public/login.js"></script>
 </body>
