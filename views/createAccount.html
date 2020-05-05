@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Minesweeper Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="../public/style.css">
+</head>
+<body>
+  <nav class="nav"></nav>
+  <header>
+    <h1>Create An account</h1>
+  </header>
+  <form action="/login" method="POST" id="createAccountForm">
+    <input type="text" placeholder="Username" required>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <input type="password" placeholder="Enter Password Again" required>
+    <input type="submit" value="Create Account">
+  </form>
+  <footer id="createAccountFooter">
+    <p>Privacy Policy</p>
+  </footer>
+
+  <script src="../public/components/nav.js"></script>
+  <script src="../public/login.js"></script>
+</body>
+</html>
