@@ -115,16 +115,10 @@
       <div class="modalHeader">
         <h3>Log in to save your best scores and get on the leader board!</h3>
       </div>
-      <form id="loginForm" action="/login" method="post">
-        <div>
-            <input type="text" name="username" placeholder="Username"/>
-        </div>
-        <div>
-            <input type="password" name="password" placeholder="Password"/>
-        </div>
-        <div>
-            <input type="submit" value="Log In"/>
-        </div>
+      <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required/>
+        <input type="password" name="password" placeholder="Password" required/>
+        <input type="submit" value="Log In"/>
       </form>
       <div>
         <button id="createAccount"><a href="/createaccount">Create A New Account</a></button>
