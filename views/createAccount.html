@@ -13,11 +13,12 @@
   <header>
     <h1>Create An account</h1>
   </header>
-  <form action="/login" method="POST" id="createAccountForm">
-    <input type="text" placeholder="Username" required>
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <input type="password" placeholder="Enter Password Again" required>
+  <form id="createAccountForm">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required> 
+    <input type="password" name="passwordAgain" placeholder="Enter Password Again" required>
+    <div id="errorDiv"></div>
     <input type="submit" value="Create Account">
   </form>
   <footer id="createAccountFooter">
@@ -25,6 +26,6 @@
   </footer>
 
   <script src="../public/components/nav.js"></script>
-  <script src="../public/login.js"></script>
+  <script src="../public/createAcct.js"></script>
 </body>
 </html>
