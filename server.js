@@ -16,15 +16,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/public", express.static(process.cwd() + "/public"));
 
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true }, 
-  (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Connected to database!");
-    }
-  }
-);
+mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).
+  catch (err => console.log(err));
+
+mongoose.connection.on("connected", () => {
+  console.log("Connected to database!");
+})
+
+// handle errors after initial connection
+mongoose.connection.on('error', (err) => {
+  console.log(err);
+});
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -46,10 +48,10 @@ app.route("/")
     res.sendFile(process.cwd() + "/views/index.html");
   });
 
-app.route("/loggedin")
+/* app.route("/loggedin")
   .get(function(req, res) {
     res.send({loggedIn: req.session.loggedIn})
-  })
+  }) */
 
 app.route("/createaccount")
   .get(function(req, res) {
