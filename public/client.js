@@ -1,7 +1,25 @@
-let width = 12, height = 12, 
-    size = 25, mines = 20, 
+// preset game grids
+let gameLevels = document.getElementById("gameLevels");
+let gameLevel = gameLevels.selectedOptions[0].value;
+gameLevels.addEventListener("change", setGameLevel);
+
+let width, height, 
+    size = 25, mines, 
     boxesCleared = 0,
     playing = false;
+
+/* beginner: 9x9 10 mines
+   intermediate: 16x16 40 mines
+   expert: 16x30 99 mines */
+
+switch (gameLevel) {
+  case "beginner": width = 9, height = 9, mines = 5;
+    break;
+  case "intermediate": width = 16, height = 16, mines = 10;
+    break;
+  case "expert": width = 30, height = 16, mines = 99;
+   break;
+}
 
 const numberColor = {
   1: "blue", 2: "green", 3: "red", 4: "purple", 5: "maroon",
@@ -29,6 +47,7 @@ let timer = document.getElementById("timer");
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
 
+// custom game grid
 let userGame = document.getElementById("userGame");
 userGame.addEventListener("click", createUserGame);
 
@@ -257,6 +276,26 @@ function winGame() {
   smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
+  console.log(gameLevel);
+  console.log("logged in: " + loggedIn + " user: " + user);
+  let score = timer.innerText
+  console.log(`score: ${score} ${typeof score}`)
+  if (loggedIn && gameLevel !== null) {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status >= 400) {
+        alert(this.response);
+        console.log("error saving score");
+      } 
+      if (this.readyState == 4 && this.status == 200) {
+        /* change this to a function that updates users score on screen */
+        alert(this.response)
+      }
+    }
+    xhttp.open("PUT", "/scores", true)
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`username=${user}&level=${gameLevel}&score=${score}`)
+  }
 }
 
 function reset() {
@@ -265,6 +304,27 @@ function reset() {
   }
 }
 
+// ssets preset game level
+function setGameLevel(e) {
+  clearInterval(start);
+  //console.log(e.target.selectedOptions[0].value);
+  switch (e.target.selectedOptions[0].value) {
+    case "beginner": width = 9, height = 9, mines = 5, gameLevel = "beginner";
+      break;
+    case "intermediate": width = 16, height = 16, mines = 10, gameLevel = "intermediate";
+      break;
+    case "expert": width = 30, height = 16, mines = 99, gameLevel = "expert";
+      break;
+  }
+  grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
+  scoreboardId.style = "width: " + width * size + "px; height: " + 1.5 * size + "px;";
+  scoreboardClass.forEach( x => {
+    x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
+  });
+  newGame();
+}
+
+// creates custom game level
 function createUserGame() {
   clearInterval(start);
   width = parseInt(document.getElementById("selectGameWidth").value);
@@ -275,6 +335,7 @@ function createUserGame() {
   scoreboardClass.forEach( x => {
     x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
   });
+  gameLevel = null
   newGame();
 }
 

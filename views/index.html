@@ -12,101 +12,132 @@
 </head>
 <body>
   <nav class="nav"></nav>
-  <header>
-    <h1>Minesweeper Beta</h1>
-  </header>
-  <div id="scoreboard">
-    <div class="scoreboard">
-      <div id="minesRemaining" class="scoreboardText">0</div>
+  <div id="scoresContainer">
+    <div id="leaderboard">
+      <h4>Leaderboard</h4>
+      <p>Beginner</p>
+      <ul id="leaderBeginner"></ul>
+      <p>Intermediate</p>
+      <ul id="leaderIntermediate"></ul>
+      <p>Expert</p>
+      <ul id="leaderExpert"></ul>
     </div>
-    <div class="scoreboard">
-      <div id="smileyFace" class="scoreboardText">😀</div>
-    </div>
-    <div class="scoreboard">
-      <div id="timer" class="scoreboardText">0</div>
-    </div>
-  </div>
-  <div id="grid" oncontextmenu="return false;"></div>
-  <h4>Create your own game board!</h4>
-  <div id="gameOptions">
-    <div class="gameWidth">
-      <label for="width">Width:</label>
-      <select name="width" id="selectGameWidth">
-        <option value="10">10</option>
-        <option value="12">12</option>
-        <option value="15" selected>15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="30">30</option>
-        <option value="35">35</option>
-      </select>
-    </div>
-    <div class="gameHeight">
-      <label for="height"> Height:</label>
-      <select name="height" id="selectGameHeight">
-        <option value="10">10</option>
-        <option value="12">12</option>
-        <option value="15" selected>15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="30">30</option>
-        <option value="35">35</option>
-      </select>
-    </div>
-    <div class="gameMines">
-      <label for="mines"> Mines:</label>
-      <select name="mines" id="selectGameMines">
-        <option value="10">10</option>
-        <option value="12">12</option>
-        <option value="15" selected>15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="30">30</option>
-        <option value="35">35</option>
-        <option value="45">45</option>
-        <option value="60">60</option>
-        <option value="75">75</option>
-        <option value="99">99</option>
-      </select>
-    </div>
-    <div class="reset">
-      <button id="userGame">Reset</button>
+    <div id="userScores">
+      <h4>Your Best Times</h4>
+      <p>Beginner</p>
+      <ul id="userBeginner"></ul>
+      <p>Intermediate</p>
+      <ul id="userIntermediate"></ul>
+      <p>Expert</p>
+      <ul id="userExpert"></ul>
     </div>
   </div>
-  <div class="howTo">
-      <a href="#howToPlay"><button id="howToPlay">Show Instructions</button></a>
-  </div>
-  <div id="instructions" style="display: none;">
-    <h3>Instructions </h3>
-    <p>
-      You are presented with a board of squares.  Some squares contain mines (bombs), others don't.  If you click on a square containing a mine, you lose.  You win by "clearing" all the squares that do not contain a mine.
-    </p>
-    <p>
-      Left clicking a square that doesn't have a mine "clears" the square and reveals the number of adjacent squares&#42 containing mines.  If the square has no adjacent mines, that square will be blank and all blank squares radiating outward will be cleared until a square with an adjacent mine is revealed.  Use this information, to avoid the mines.
-    </p>
-    <p>
-      You can flag squares you think are mines.  To flag a square you think is a mine, right click on it.  To remove the flag right click the square again.  If you flag a mine incorrectly, you will have to remove the flag and clear the square before you can win.   You don't have to flag all the mines to win.  The flags are just a tool to help you remember where you think there is a mine.   To win you still need to clear all squares without mines.
-    </p>
-    <p>
-      The first clicked square is never a mine.
-    </p>
-    <p>
-      After you win or lose a game, click the yellow emoji face to start a new game. 
-    </p>
-    <p>
-      &#42Adjacent squares are those squares directly above, below, left, right, and at each corner of the clicked square.
-    </p>
-    <h3>Scoreboard Information</h3>
-    <p>
-      At the start of the game, the upper left corner indicates the number of hidden mines.  When you flag a square this number decreases by one (and increases by one if a flag is removed).  You cannot flag more squares than the number of mines on the board.
-    </p>
-    <p>
-      The upper right corner is a timer in seconds.  Try to clear the mines as fast as possible.  If the timer reaches 999 the game ends.
-    </p>
-    <h3>Create  Your Own Game Board</h3>
-    <p>
-      Select the number of squares you want for the width and height, and the number of mines to hide.  Then click the Reset button.  Your choices determines the difficulty of clearing the board.
-    </p>
+  <div id="gameContainer">
+    <header>
+      <h1>Minesweeper Beta</h1>
+    </header>
+    <div id="scoreboard">
+      <div class="scoreboard">
+        <div id="minesRemaining" class="scoreboardText">0</div>
+      </div>
+      <div class="scoreboard">
+        <div id="smileyFace" class="scoreboardText">😀</div>
+      </div>
+      <div class="scoreboard">
+        <div id="timer" class="scoreboardText">0</div>
+      </div>
+    </div>
+    <div id="grid" oncontextmenu="return false;"></div>
+    <div id="presetGameLevels">
+      <label for="presetGameLevels">Game Level: </label>
+      <select name="presetGameLevels" id="gameLevels">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate" selected>Intermediate</option>
+        <option value="expert">Expert</option>
+      </select>
+    </div>
+    <h4>Create your own game board!</h4>
+    <div id="gameOptions">
+      <div class="gameWidth">
+        <label for="width">Width:</label>
+        <select name="width" id="selectGameWidth">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+        </select>
+      </div>
+      <div class="gameHeight">
+        <label for="height"> Height:</label>
+        <select name="height" id="selectGameHeight">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+        </select>
+      </div>
+      <div class="gameMines">
+        <label for="mines"> Mines:</label>
+        <select name="mines" id="selectGameMines">
+          <!-- change first option back to 10 after testing -->
+          <option value="5">5</option>
+          <option value="12">12</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+          <option value="45">45</option>
+          <option value="60">60</option>
+          <option value="75">75</option>
+          <option value="99">99</option>
+        </select>
+      </div>
+      <div class="reset">
+        <button id="userGame">Reset</button>
+      </div>
+    </div>
+    <div class="howTo">
+        <a href="#howToPlay"><button id="howToPlay">Show Instructions</button></a>
+    </div>
+    <div id="instructions" style="display: none;">
+      <h3>Instructions </h3>
+      <p>
+        You are presented with a board of squares.  Some squares contain mines (bombs), others don't.  If you click on a square containing a mine, you lose.  You win by "clearing" all the squares that do not contain a mine.
+      </p>
+      <p>
+        Left clicking a square that doesn't have a mine "clears" the square and reveals the number of adjacent squares&#42 containing mines.  If the square has no adjacent mines, that square will be blank and all blank squares radiating outward will be cleared until a square with an adjacent mine is revealed.  Use this information, to avoid the mines.
+      </p>
+      <p>
+        You can flag squares you think are mines.  To flag a square you think is a mine, right click on it.  To remove the flag right click the square again.  If you flag a mine incorrectly, you will have to remove the flag and clear the square before you can win.   You don't have to flag all the mines to win.  The flags are just a tool to help you remember where you think there is a mine.   To win you still need to clear all squares without mines.
+      </p>
+      <p>
+        The first clicked square is never a mine.
+      </p>
+      <p>
+        After you win or lose a game, click the yellow emoji face to start a new game. 
+      </p>
+      <p>
+        &#42Adjacent squares are those squares directly above, below, left, right, and at each corner of the clicked square.
+      </p>
+      <h3>Scoreboard Information</h3>
+      <p>
+        At the start of the game, the upper left corner indicates the number of hidden mines.  When you flag a square this number decreases by one (and increases by one if a flag is removed).  You cannot flag more squares than the number of mines on the board.
+      </p>
+      <p>
+        The upper right corner is a timer in seconds.  Try to clear the mines as fast as possible.  If the timer reaches 999 the game ends.
+      </p>
+      <h3>Create  Your Own Game Board</h3>
+      <p>
+        Select the number of squares you want for the width and height, and the number of mines to hide.  Then click the Reset button.  Your choices determines the difficulty of clearing the board.
+      </p>
+    </div>
   </div>
 
   <!-- login modal -->
