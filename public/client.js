@@ -288,7 +288,6 @@ function winGame() {
         console.log("error saving score");
       } 
       if (this.readyState == 4 && this.status == 200) {
-        /* change this to a function that updates users score on screen */
         alert(this.response)
       }
     }
