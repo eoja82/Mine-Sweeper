@@ -77,7 +77,13 @@ function getScoresLoginStatus() {
 function createScoreList(level) {
   let list = []
   level.forEach( x => {
-    list.push(`<li class="scoreListItem">${x.username} <span class="alignRight">${x.score}</span></li>`)
+    //console.log(typeof x)
+    if (typeof x == "number") {
+      list.push(`<li class="scoreListItem">${user} <span class="alignRight">${x}</span></li>`)
+    } else {
+      list.push(`<li class="scoreListItem">${x.username} <span class="alignRight">${x.score}</span></li>`)
+    }
+    
   })
   return list.join("")
 }
@@ -87,11 +93,12 @@ noAccount.addEventListener("click", closeModal)
 //login.addEventListener("click", displayModal)
 
 function displayModal() {
+  //console.log("displaying modal")
   loginModal.style.display = "block"
 }
 function closeModal() {
   loginModal.style.display = "none"
-  console.log("close modal")
+  //console.log("close modal")
 }
 
 // login user

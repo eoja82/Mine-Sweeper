@@ -12,9 +12,9 @@ module.exports = function(app) {
     username: {type: String, trim: true, unique: true},
     hash: String,
     userCreated: {type: Date, default: Date.now},
-    beginnerScores: [Number],
-    intermediateScores: [Number],
-    expertScores: [Number]
+    beginner: [Number],
+    intermediate: [Number],
+    expert: [Number]
   })
 
   let leaderboardSchema = new Schema({
@@ -63,7 +63,7 @@ module.exports = function(app) {
           leaderExpert = doc.expert
 
           if (loginStatus) {
-            console.log(username)
+            //console.log(username)
             Users.findOne({username: username}, function(err, doc) {
               if (err) {
                 console.log(err)
@@ -72,10 +72,10 @@ module.exports = function(app) {
                 console.log(`can't find user ${username}`)
               }
               else {
-                console.log(doc)
-                userBeginner = doc.beginnerScores
-                userIntermediate = doc.intermediateScores
-                userExpert = doc.expertScores
+                //console.log(doc)
+                userBeginner = doc.beginner
+                userIntermediate = doc.intermediate
+                userExpert = doc.expert
                 res.send({
                   loggedIn: loginStatus, 
                   username: username,
@@ -205,58 +205,124 @@ module.exports = function(app) {
 
     // update users' scores
     app.route("/scores")
-      .put(function(req, res) {
+      .put(async function(req, res) {
         //console.log(req.body)
         const username = req.body.username,
               level = req.body.level,
               score = Number(req.body.score)
-        let levelScores
+        let levelScoresLeaderboard,
+            levelScoresUser,
+            newLeaderboardHighScore,
+            newUserHighScore
         
-        Leaderboard.findOne({name: "leaderboard"}, function(err, doc) {
+        await Leaderboard.findOne({name: "leaderboard"}, function(err, doc) {
           if (err) {
             console.log(err)
             res.send("Error: Sorry, your score could not be saved to the leaderboard.")
           } else if (!doc) {
             console.log("could not find leaderboard")
           } else {
-            //const levelScores = doc[level]
-            levelScores = doc[level]
-            let matchedScore = levelScores.some( x => x.score == score )
+            //const levelScoresLeaderboard = doc[level]
+            levelScoresLeaderboard = doc[level]
+            let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
             //console.log(matchedScore)
-            if (matchedScore) return
+            if (matchedScore){
+              newLeaderboardHighScore = false
+              return
+            }
 
-            if (levelScores.length < 5) {
-              levelScores.push({username: username, score: score})
-              levelScores.sort( (a, b) => {
+            if (levelScoresLeaderboard.length < 5) {
+              levelScoresLeaderboard.push({username: username, score: score})
+              levelScoresLeaderboard.sort( (a, b) => {
                 return a.score - b.score
               })
               updateLeaderBoard()
+              newLeaderboardHighScore = true
             } else {
-              console.log(levelScores)
-              //console.log(`${levelScores[levelScores.length - 1].score} ${score}`)
-              if (levelScores[levelScores.length - 1].score > score) {
-                levelScores.pop()
-                levelScores.push({username: username, score: score})
-                levelScores.sort( (a, b) => {
+              //console.log(levelScoresLeaderboard)
+              //console.log(`${levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score} ${score}`)
+              if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
+                levelScoresLeaderboard.pop()
+                levelScoresLeaderboard.push({username: username, score: score})
+                levelScoresLeaderboard.sort( (a, b) => {
                   return a.score - b.score
                 })
-                console.log(levelScores)
-                // findoneandupdate make a function so you don't repeat
+                console.log(levelScoresLeaderboard)
                 updateLeaderBoard()
-                /* res.send(`Congratulations, you made it onto the ${level} level Leaderboard!`) */
+                newLeaderboardHighScore = true
               }
             }
           }
         })
+
+        await Users.findOne({username: username}, function(err, doc) {
+          if (err) {
+            console.log(err)
+            res.send("Error could not save score.")
+          } else if (!doc) {
+            console.log("Could not find user.")
+          } else {
+            levelScoresUser = doc[level]
+            console.log(levelScoresUser)
+            let matchedScore = levelScoresUser.some( x => x == score )
+            if (matchedScore){
+              newUserHighScore = false
+              return
+            }
+            if (levelScoresUser.length < 5) {
+              levelScoresUser.push(score)
+              levelScoresUser.sort( (a, b) => {
+                return a - b
+              })
+              console.log(levelScoresUser)
+              updateUsersScores()
+              newUserHighScore = true
+            } else {
+              console.log(levelScoresUser)
+              if (levelScoresUser[levelScoresUser.length - 1] > score) {
+                levelScoresUser.pop()
+                levelScoresUser.push(score)
+                levelScoresUser.sort( (a, b) => {
+                  return a - b
+                })
+                console.log(levelScoresUser)
+                updateUsersScores()
+                newUserHighScore = true
+              }
+            }
+          }
+        })
+
+        console.log(`newUserHighScore: ${newUserHighScore}, newLeaderboardHighScore: ${newLeaderboardHighScore}`)
+        if (newUserHighScore && newLeaderboardHighScore) {
+          res.send(`Congratulations, you made the Leaderboard and have a new personal high score for the ${level} level!`)
+        } else if (newUserHighScore && !newLeaderboardHighScore) {
+          res.send(`Congratulations, you have a new personal high score for the ${level} level.`)
+        } else {
+          return
+        }
         
         function updateLeaderBoard() {
-          Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScores}, {new: true}, function(err, doc) {
+          Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
             if (err) {
               console.log(err)
               res.send("Error: Sorry, your score could not be saved to the leaderboard.")
             } else {
               //console.log(doc)
-              res.send(`Congratulations, you made it onto the ${level} level Leaderboard!`)
+              //res.send(`Congratulations, you made it onto the ${level} level Leaderboard!`)
+              return
+            }
+          })
+        }
+
+        function updateUsersScores() {
+          Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
+            if (err) {
+              console.log(err)
+              res.send("Error: Sorry your score could not be saved.")
+            } else {
+              console.log(doc)
+              return
             }
           })
         }
