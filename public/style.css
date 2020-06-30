@@ -47,7 +47,7 @@ nav {
 
 #scoresContainer {
   width: 150px;
-  height: 100vh;
+  height: calc(100vh - 54px);
   color: rgb(190, 190, 190);
   position: fixed;
   top: 0;
