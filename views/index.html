@@ -11,7 +11,15 @@
   <link rel="stylesheet" href="../public/style.css">
 </head>
 <body>
-  <nav class="nav"></nav>
+  <nav class="nav">
+    <button id="welcome"></button>
+    <button class="navButton">
+      <a href="javascript:void(0)" id="login" class="navLink">Log In<hr></a>
+    </button>
+    <button class="navButton">
+      <a href="/createaccount" class="navLink">Create An Account<hr></a>
+    </button>
+  </nav>
   <div id="scoresContainer">
     <div id="leaderboard">
       <h4>Leaderboard</h4>
@@ -160,7 +168,6 @@
     </div>
   </div>
 
-  <script src="../public/components/nav.js"></script>
   <script src="../public/client.js"></script>
   <script src="../public/login.js"></script>
 </body>

@@ -1,5 +1,17 @@
 const createAccountForm = document.getElementById("createAccountForm")
 const errorDiv = document.getElementById("errorDiv")
+const privacyPolicy = document.getElementById("privacyPolicy")
+const privacyLink = document.getElementById("privacyLink")
+//console.log(privacyPolicy)
+privacyLink.addEventListener("click", displayPolicy)
+
+function displayPolicy() {
+  if (privacyPolicy.style.height == "0px") {
+    privacyPolicy.style.height = "177px"
+  } else {
+    privacyPolicy.style.height = "0px"
+  }
+}
 
 // create new user account
 createAccountForm.addEventListener("submit", createNewUserAccount, true)
@@ -10,7 +22,6 @@ function createNewUserAccount(e) {
         email = formData[1].value,
         password = formData[2].value,
         passwordAgain = formData[3].value
-  console.log(`${username} ${email} ${password} ${passwordAgain}`)
 
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -32,3 +43,4 @@ function createNewUserAccount(e) {
   xhttp.send(`username=${username}&email=${email}&password=${password}&passwordAgain=${passwordAgain}`);
   e.preventDefault()
 }
+
