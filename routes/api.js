@@ -8,7 +8,7 @@ mongoose.set("useFindAndModify", false)
 
 module.exports = function(app) {
   let userSchema = new Schema({
-    email: {type: String, trim: true, unique: true},
+    email: {type: String, trim: true},
     username: {type: String, trim: true, unique: true},
     hash: String,
     userCreated: {type: Date, default: Date.now},
@@ -129,9 +129,8 @@ module.exports = function(app) {
               console.log(err)
               res.send(`Error locating email ${email}.`)
             }
-            if (doc) res.send(`An account with email ${email} already exists.`)
             // if username and email not found create new user account
-            if (!doc) {
+            if (!doc || doc.email == "") {
               bcrypt.hash(password, 12, function(err, hash) {
                 if (err) {
                   console.log(err)
@@ -154,10 +153,12 @@ module.exports = function(app) {
                 }
               })
             }
+            else { 
+              res.send(`An account with email ${email} already exists.`)
+            }
           })
         }
       })
-
     })
 
 
@@ -209,126 +210,178 @@ module.exports = function(app) {
         //console.log(req.body)
         const username = req.body.username,
               level = req.body.level,
-              score = Number(req.body.score)
-        let levelScoresLeaderboard,
+              score = Number(req.body.score),
+              loginStatus = req.session.loggedIn   
+        let leaderBeginner,
+            leaderIntermediate,
+            leaderExpert,
+            userBeginner,
+            userIntermediate,
+            userExpert,
+            levelScoresLeaderboard,
             levelScoresUser,
             newLeaderboardHighScore,
-            newUserHighScore
-        
-        await Leaderboard.findOne({name: "leaderboard"}, function(err, doc) {
-          if (err) {
-            console.log(err)
-            res.send("Error: Sorry, your score could not be saved to the leaderboard.")
-          } else if (!doc) {
-            console.log("could not find leaderboard")
-          } else {
-            //const levelScoresLeaderboard = doc[level]
-            levelScoresLeaderboard = doc[level]
-            let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
-            //console.log(matchedScore)
-            if (matchedScore){
-              newLeaderboardHighScore = false
-              return
-            }
+            newUserHighScore,
+            message
 
-            if (levelScoresLeaderboard.length < 5) {
-              levelScoresLeaderboard.push({username: username, score: score})
-              levelScoresLeaderboard.sort( (a, b) => {
-                return a.score - b.score
-              })
-              updateLeaderBoard()
-              newLeaderboardHighScore = true
-            } else {
-              //console.log(levelScoresLeaderboard)
-              //console.log(`${levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score} ${score}`)
-              if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
-                levelScoresLeaderboard.pop()
-                levelScoresLeaderboard.push({username: username, score: score})
-                levelScoresLeaderboard.sort( (a, b) => {
-                  return a.score - b.score
-                })
-                console.log(levelScoresLeaderboard)
-                updateLeaderBoard()
-                newLeaderboardHighScore = true
+        await checkForLeaderboardHighScore()
+        await checkForUserHighScore()
+
+        function checkForLeaderboardHighScore() {
+          return new Promise( (resolve, reject) => {
+            Leaderboard.findOne({name: "leaderboard"}, async function(err, doc) {
+              if (err) {
+                console.log(err)
+                res.send("Error: Sorry, your score could not be saved to the leaderboard.")
+                reject()
+              } else if (!doc) {
+                console.log("could not find leaderboard")
+                reject()
+              } else {
+                levelScoresLeaderboard = doc[level]
+                let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
+                
+                if (matchedScore){
+                  newLeaderboardHighScore = false
+                  leaderBeginner = doc.beginner
+                  leaderIntermediate = doc.intermediate
+                  leaderExpert = doc.expert
+                  return resolve()
+                }
+
+                if (levelScoresLeaderboard.length < 5) {
+                  levelScoresLeaderboard.push({username: username, score: score})
+                  levelScoresLeaderboard.sort( (a, b) => {
+                    return a.score - b.score
+                  })
+                  await updateLeaderBoard()
+                  newLeaderboardHighScore = true
+                  resolve()
+                } else {
+                  if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
+                    levelScoresLeaderboard.pop()
+                    levelScoresLeaderboard.push({username: username, score: score})
+                    levelScoresLeaderboard.sort( (a, b) => {
+                      return a.score - b.score
+                    })
+                    await updateLeaderBoard()
+                    newLeaderboardHighScore = true
+                    resolve()
+                  }
+                }
               }
-            }
-          }
-        })
+              resolve()
+            })
+          }) 
+        }
 
-        await Users.findOne({username: username}, function(err, doc) {
-          if (err) {
-            console.log(err)
-            res.send("Error could not save score.")
-          } else if (!doc) {
-            console.log("Could not find user.")
-          } else {
-            levelScoresUser = doc[level]
-            console.log(levelScoresUser)
-            let matchedScore = levelScoresUser.some( x => x == score )
-            if (matchedScore){
-              newUserHighScore = false
-              return
-            }
-            if (levelScoresUser.length < 5) {
-              levelScoresUser.push(score)
-              levelScoresUser.sort( (a, b) => {
-                return a - b
-              })
-              console.log(levelScoresUser)
-              updateUsersScores()
-              newUserHighScore = true
-            } else {
-              console.log(levelScoresUser)
-              if (levelScoresUser[levelScoresUser.length - 1] > score) {
-                levelScoresUser.pop()
-                levelScoresUser.push(score)
-                levelScoresUser.sort( (a, b) => {
-                  return a - b
-                })
-                console.log(levelScoresUser)
-                updateUsersScores()
-                newUserHighScore = true
+        function checkForUserHighScore() {
+          return new Promise( (resolve, reject) => {
+            Users.findOne({username: username}, async function(err, doc) {
+              if (err) {
+                console.log(err)
+                res.send("Error could not save score.")
+                reject()
+              } else if (!doc) {
+                console.log("Could not find user.")
+                reject()
+              } else {
+                levelScoresUser = doc[level]
+                let matchedScore = levelScoresUser.some( x => x == score )
+                if (matchedScore){
+                  newUserHighScore = false
+                  userBeginner = doc.beginner
+                  userIntermediate = doc.intermediate
+                  userExpert = doc.expert
+                  return resolve()
+                }
+                if (levelScoresUser.length < 5) {
+                  levelScoresUser.push(score)
+                  levelScoresUser.sort( (a, b) => {
+                    return a - b
+                  })
+                  await updateUsersScores()
+                  newUserHighScore = true
+                  resolve()
+                } else {
+                  if (levelScoresUser[levelScoresUser.length - 1] > score) {
+                    levelScoresUser.pop()
+                    levelScoresUser.push(score)
+                    levelScoresUser.sort( (a, b) => {
+                      return a - b
+                    })
+                    await updateUsersScores()
+                    newUserHighScore = true
+                    resolve()
+                  }
+                }
               }
-            }
-          }
-        })
+            })
+          })  
+        }
 
-        console.log(`newUserHighScore: ${newUserHighScore}, newLeaderboardHighScore: ${newLeaderboardHighScore}`)
+        //console.log(`user high: ${newLeaderboardHighScore}, leaderHigh: ${newLeaderboardHighScore}`)
         if (newUserHighScore && newLeaderboardHighScore) {
-          res.send(`Congratulations, you made the Leaderboard and have a new personal high score for the ${level} level!`)
+          //console.log("new leader and user high score")
+          message = `Congratulations, you made the Leaderboard and have a new personal high score for the ${level} level!`
         } else if (newUserHighScore && !newLeaderboardHighScore) {
-          res.send(`Congratulations, you have a new personal high score for the ${level} level.`)
+          //console.log("new user high score")
+          message = `Congratulations, you have a new personal high score for the ${level} level.`
         } else {
+          //console.log("return in setting message")
           return
         }
-        
+        //console.log(`userBeginner: ${userBeginner}`)
+        res.send({
+          message: message,
+          leaderBeginner: leaderBeginner,
+          leaderIntermediate: leaderIntermediate,
+          leaderExpert: leaderExpert,
+          userBeginner: userBeginner,
+          userIntermediate: userIntermediate,
+          userExpert: userExpert,
+          loggedIn: loginStatus
+        })
+
         function updateLeaderBoard() {
-          Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
-            if (err) {
-              console.log(err)
-              res.send("Error: Sorry, your score could not be saved to the leaderboard.")
-            } else {
-              //console.log(doc)
-              //res.send(`Congratulations, you made it onto the ${level} level Leaderboard!`)
-              return
-            }
+          return new Promise( (resolve, reject) => {
+            //console.log("updating leaderboard scores")
+            Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
+              if (err) {
+                console.log(err)
+                res.send("Error: Sorry, your score could not be saved to the leaderboard.")
+                reject()
+              } else {
+                //console.log("updated leaderboard scores")
+                leaderBeginner = doc.beginner
+                leaderIntermediate = doc.intermediate
+                leaderExpert = doc.expert
+                resolve()
+              }
+            })
           })
         }
 
         function updateUsersScores() {
-          Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
-            if (err) {
-              console.log(err)
-              res.send("Error: Sorry your score could not be saved.")
-            } else {
-              console.log(doc)
-              return
-            }
+          return new Promise( (resolve, reject) => {
+            //console.log("updating user scores")
+            Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
+              if (err) {
+                console.log(err)
+                res.send("Error: Sorry your score could not be saved.")
+                reject()
+              } else {
+                //console.log("updated user score")
+                userBeginner = doc.beginner
+                userIntermediate = doc.intermediate
+                userExpert = doc.expert
+                resolve()
+              }
+            })
           })
         }
 
       })
 
       
-
   }
