@@ -19,6 +19,8 @@ switch (gameLevel) {
     break;
   case "expert": width = 30, height = 16, mines = 99;
    break;
+  default:
+    break;
 }
 
 const numberColor = {
@@ -276,25 +278,35 @@ function winGame() {
   smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
-  console.log(gameLevel);
-  console.log("logged in: " + loggedIn + " user: " + user);
+  //console.log(gameLevel);
+  //console.log("logged in: " + loggedIn + " user: " + user);
   let score = timer.innerText
-  console.log(`score: ${score} ${typeof score}`)
+  //console.log(`score: ${score} ${typeof score}`)
   if (loggedIn && gameLevel !== null) {
-    const xhttp = new XMLHttpRequest()
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status >= 400) {
-        alert(this.response);
-        console.log("error saving score");
-      } 
-      if (this.readyState == 4 && this.status == 200) {
-        alert(this.response)
-      }
-    }
-    xhttp.open("PUT", "/scores", true)
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`username=${user}&level=${gameLevel}&score=${score}`)
+    //console.log("getScores")
+    getScores(score)
   }
+}
+
+function getScores(score) {
+  //console.log("in GetScores")
+  const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function() {
+    //console.log(`ready: ${this.readyState}, status: ${this.status}`)
+    if (this.readyState == 4 && this.status >= 400) {
+      alert(this.response);
+      console.log("error saving score");
+    } 
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.response)
+      //console.log(res)
+      alert(res.message)
+      setLeaderboardScores(res, res.loggedIn)
+    }
+  }
+  xhttp.open("PUT", "/scores", true)
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send(`username=${user}&level=${gameLevel}&score=${score}`)
 }
 
 function reset() {
@@ -313,6 +325,8 @@ function setGameLevel(e) {
     case "intermediate": width = 16, height = 16, mines = 10, gameLevel = "intermediate";
       break;
     case "expert": width = 30, height = 16, mines = 99, gameLevel = "expert";
+      break;
+    default:
       break;
   }
   grid.style = "width: " + width * size + "px; height: " + height * size + "px;";

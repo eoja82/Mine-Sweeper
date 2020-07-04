@@ -11,6 +11,8 @@ const userScores = document.getElementById("userScores")
 const userBeginner = document.getElementById("userBeginner")
 const userIntermediate = document.getElementById("userIntermediate")
 const userExpert = document.getElementById("userExpert")
+const welcome = document.getElementById("welcome")
+const navButtons = document.querySelectorAll(".navButton")
 let loggedIn,
     user
 
@@ -34,20 +36,14 @@ function getScoresLoginStatus() {
       } 
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response)
-        //console.log(res)
-        //console.log(res.username)
-        let leaderBeginnerList = createScoreList(res.leaderBeginner)
-        leaderBegginer.innerHTML = leaderBeginnerList
-        let leaderIntermediateList = createScoreList(res.leaderIntermediate)
-        leaderIntermediate.innerHTML = leaderIntermediateList
-        let leaderExpertList = createScoreList(res.leaderExpert)
-        leaderExpert.innerHTML = leaderExpertList
-
         loggedIn = res.loggedIn
         user = res.username
+
+        setLeaderboardScores(res, loggedIn)
+        
         if (!loggedIn) {
-          //addEventListener("load", displayModal)
           displayModal()
+          welcome.style.display = "none"
           login.childNodes[0].nodeValue = "Log In"
           login.addEventListener("click", displayModal)
           login.removeEventListener("click", logoutUser)
@@ -55,16 +51,12 @@ function getScoresLoginStatus() {
         }
         if (loggedIn) {
           //console.log("logged In")
+          welcome.style.display = "block"
+          welcome.innerText = `Welcome, ${user}!`
           login.childNodes[0].nodeValue = `Log Out ${user}`
           login.removeEventListener("click", displayModal)
           login.addEventListener("click", logoutUser)
           userScores.style.display = "block"
-          let userBeginnerList = createScoreList(res.userBeginner)
-          userBeginner.innerHTML = userBeginnerList
-          let userIntermediateList = createScoreList(res.userIntermediate)
-          userIntermediate.innerHTML = userIntermediateList
-          let userExpertList = createScoreList(res.userExpert)
-          userExpert.innerHTML = userExpertList
         }
         resolve()
       }
@@ -74,7 +66,31 @@ function getScoresLoginStatus() {
   })
 }
 
+function setLeaderboardScores(res, loggedIn) {
+  let leaderBeginnerList = createScoreList(res.leaderBeginner)
+  leaderBegginer.innerHTML = leaderBeginnerList
+  let leaderIntermediateList = createScoreList(res.leaderIntermediate)
+  leaderIntermediate.innerHTML = leaderIntermediateList
+  let leaderExpertList = createScoreList(res.leaderExpert)
+  leaderExpert.innerHTML = leaderExpertList
+  if (loggedIn) setUserScores(res)
+}
+
+function setUserScores(res) {
+  userScores.style.display = "block"
+  //console.log("Begin level " + res.userBeginner)
+  let userBeginnerList = createScoreList(res.userBeginner)
+  userBeginner.innerHTML = userBeginnerList
+  //console.log("Inter level " + res.userIntermediate)
+  let userIntermediateList = createScoreList(res.userIntermediate)
+  userIntermediate.innerHTML = userIntermediateList
+  //console.log("expert level " + res.userExpert)
+  let userExpertList = createScoreList(res.userExpert)
+  userExpert.innerHTML = userExpertList
+}
+
 function createScoreList(level) {
+  //console.log(level)  // undefined for user scores
   let list = []
   level.forEach( x => {
     //console.log(typeof x)
