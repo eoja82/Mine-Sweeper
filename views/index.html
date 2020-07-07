@@ -13,57 +13,45 @@
 <body>
   <nav class="nav">
     <button id="welcome"></button>
-    <button class="navButton">
-      <a href="javascript:void(0)" id="login" class="navLink">Log In<hr></a>
+    <button class="navButton" id="howToPlay">
+      <a href="#instructions" class="navLink">Show Instructions<hr></a>
     </button>
     <button class="navButton">
-      <a href="/createaccount" class="navLink">Create An Account<hr></a>
+      <a href="javascript:void(0)" id="navLogin" class="navLink">Log In<hr></a>
     </button>
+    <button class="navButton" id="navCreateAccount">
+      <a href="/accounts" class="navLink">Create An Account<hr></a>
+    </button>
+    <a href="javascript:void(0);" id="navHamburger" class="navLink">&#9776;</a>
   </nav>
-  <div id="scoresContainer">
-    <div id="leaderboard">
-      <h4>Leaderboard</h4>
-      <p>Beginner</p>
-      <ul id="leaderBeginner"></ul>
-      <p>Intermediate</p>
-      <ul id="leaderIntermediate"></ul>
-      <p>Expert</p>
-      <ul id="leaderExpert"></ul>
-    </div>
-    <div id="userScores">
-      <h4>Your Best Times</h4>
-      <p>Beginner</p>
-      <ul id="userBeginner"></ul>
-      <p>Intermediate</p>
-      <ul id="userIntermediate"></ul>
-      <p>Expert</p>
-      <ul id="userExpert"></ul>
-    </div>
-  </div>
   <div id="gameContainer">
-    <header>
-      <h1>Minesweeper Beta</h1>
-    </header>
-    <div id="scoreboard">
-      <div class="scoreboard">
-        <div id="minesRemaining" class="scoreboardText">0</div>
+    <!-- <header> -->
+      <h1>Minesweeper</h1>
+    <!-- </header> -->
+    <div id="game">
+      <div id="scoreboard">
+        <div class="scoreboard">
+          <div id="minesRemaining" class="scoreboardText">0</div>
+        </div>
+        <div class="scoreboard">
+          <div id="smileyFace" class="scoreboardText">😀</div>
+        </div>
+        <div class="scoreboard">
+          <div id="timer" class="scoreboardText">0</div>
+        </div>
       </div>
-      <div class="scoreboard">
-        <div id="smileyFace" class="scoreboardText">😀</div>
-      </div>
-      <div class="scoreboard">
-        <div id="timer" class="scoreboardText">0</div>
-      </div>
+      <div id="grid" oncontextmenu="return false;"></div>
     </div>
-    <div id="grid" oncontextmenu="return false;"></div>
     <div id="presetGameLevels">
       <label for="presetGameLevels">Game Level: </label>
       <select name="presetGameLevels" id="gameLevels">
         <option value="beginner">Beginner</option>
         <option value="intermediate" selected>Intermediate</option>
         <option value="expert">Expert</option>
+        <option value="custom">Custom</option>
       </select>
     </div>
+    <div id="customGameLevels" style="display: none;">
     <h4>Create your own game board!</h4>
     <div id="gameOptions">
       <div class="gameWidth">
@@ -75,7 +63,6 @@
           <option value="20">20</option>
           <option value="25">25</option>
           <option value="30">30</option>
-          <option value="35">35</option>
         </select>
       </div>
       <div class="gameHeight">
@@ -87,7 +74,6 @@
           <option value="20">20</option>
           <option value="25">25</option>
           <option value="30">30</option>
-          <option value="35">35</option>
         </select>
       </div>
       <div class="gameMines">
@@ -108,13 +94,50 @@
         </select>
       </div>
       <div class="reset">
-        <button id="userGame">Reset</button>
+        <button id="userGame">Customize</button>
       </div>
     </div>
-    <div class="howTo">
-        <a href="#howToPlay"><button id="howToPlay">Show Instructions</button></a>
+   
+    <p id="scoresNote">*Scores for custom game levels are not saved to your account.</p>
     </div>
-    <div id="instructions" style="display: none;">
+    <div id="scoresContainer">
+      <div id="leaderboard">
+        <h4>Leaderboard</h4>
+        <div class="scores">
+          <div class="scoresDiv">
+            <p>Beginner</p>
+            <ul id="leaderBeginner"></ul>
+          </div>
+          <div class="scoresDiv">
+            <p>Intermediate</p>
+            <ul id="leaderIntermediate"></ul>
+          </div>
+          <div class="scoresDiv">
+            <p>Expert</p>
+            <ul id="leaderExpert"></ul>
+          </div>
+        </div>
+      </div>
+      <div id="userScores">
+        <h4>Your Best Times</h4>
+        <div class="scores">
+          <div class="scoresDiv">
+            <p>Beginner</p>
+            <ul id="userBeginner"></ul>
+          </div>
+          <div class="scoresDiv">
+            <p>Intermediate</p>
+            <ul id="userIntermediate"></ul>
+          </div>
+          <div class="scoresDiv">
+            <p>Expert</p>
+            <ul id="userExpert"></ul>
+          </div>
+        </div>        
+      </div>
+    </div>
+    <div id="instructions" style="display: none;"> 
+      <div id="closeInstructions">&times</div>
       <h3>Instructions </h3>
       <p>
         You are presented with a board of squares.  Some squares contain mines (bombs), others don't.  If you click on a square containing a mine, you lose.  You win by "clearing" all the squares that do not contain a mine.
@@ -152,7 +175,7 @@
   <div id="loginModal">
     <div class="modalContent">
       <div class="modalHeader">
-        <h3>Log in to save your best scores and get on the leader board!</h3>
+        <h3>Log in to save your best scores and get on the Leaderboard!</h3>
       </div>
       <form id="loginForm">
         <input type="text" name="username" placeholder="Username" required/>
@@ -160,7 +183,7 @@
         <input type="submit" value="Log In"/>
       </form>
       <div>
-        <button id="createAccount"><a href="/createaccount">Create A New Account</a></button>
+        <button id="createAccount"><a href="/accounts">Create A New Account</a></button>
       </div>
       <div>
         <button id="noAccount">Play Without An Account</button>

@@ -3,7 +3,8 @@ const loginModal = document.getElementById("loginModal")
 const noAccount = document.getElementById("noAccount")
 //const login = document.getElementById("login")
 const loginForm = document.getElementById("loginForm")
-const login = document.getElementById("login")
+const navLogin = document.getElementById("navLogin")
+const navCreateAccount = document.getElementById("navCreateAccount")
 const leaderBegginer = document.getElementById("leaderBeginner")
 const leaderIntermediate = document.getElementById("leaderIntermediate")
 const leaderExpert = document.getElementById("leaderExpert")
@@ -13,16 +14,37 @@ const userIntermediate = document.getElementById("userIntermediate")
 const userExpert = document.getElementById("userExpert")
 const welcome = document.getElementById("welcome")
 const navButtons = document.querySelectorAll(".navButton")
+const gameContainer = document.getElementById("gameContainer")
+const scoresContainer = document.getElementById("scoresContainer")
+const leaderboard = document.getElementById("leaderboard")
 let loggedIn,
-    user
+    user,
+    screenWidth
 
-/* addEventListener("DOMContentLoaded", loadData)
+addEventListener("resize", resetScreenWidth)
 
-async function loadData() {
-
-} */
+function resetScreenWidth() {
+  screenWidth = innerWidth
+  if (!loggedIn && screenWidth > 1100) {
+    gameContainer.style.marginLeft = "150px"
+    scoresContainer.style.width = "150px"
+    /* leaderboard.style.maxWidth = "100%" */
+  } else {
+    gameContainer.style.marginLeft = "auto"
+    scoresContainer.style.width = "95%"
+  }
+  if (loggedIn && screenWidth > 1100) {
+    gameContainer.style.marginLeft = "300px"
+    scoresContainer.style.width = "300px"
+  } else {
+    gameContainer.style.marginLeft = "auto"
+    scoresContainer.style.width = "95%"
+  }
+  //console.log(`width: ${screenWidth} ${typeof screenWidth}`)
+}
 
 (async function init() {
+  screenWidth = innerWidth
   await getScoresLoginStatus()
 })();
 
@@ -44,19 +66,30 @@ function getScoresLoginStatus() {
         if (!loggedIn) {
           displayModal()
           welcome.style.display = "none"
-          login.childNodes[0].nodeValue = "Log In"
-          login.addEventListener("click", displayModal)
-          login.removeEventListener("click", logoutUser)
+          navLogin.childNodes[0].nodeValue = "Log In"
+          navLogin.addEventListener("click", displayModal)
+          navLogin.removeEventListener("click", logoutUser)
+          navCreateAccount.style.display = "block"
           userScores.style.display = "none"
+          if (screenWidth > 1100) {
+            gameContainer.style.marginLeft = "150px"
+            scoresContainer.style.width = "150px"
+            leaderboard.style.maxWidth = "100%"
+          }
         }
         if (loggedIn) {
           //console.log("logged In")
           welcome.style.display = "block"
           welcome.innerText = `Welcome, ${user}!`
-          login.childNodes[0].nodeValue = `Log Out ${user}`
-          login.removeEventListener("click", displayModal)
-          login.addEventListener("click", logoutUser)
-          userScores.style.display = "block"
+          navLogin.childNodes[0].nodeValue = "Log Out"
+          navLogin.removeEventListener("click", displayModal)
+          navLogin.addEventListener("click", logoutUser)
+          navCreateAccount.style.display = "none"
+          userScores.style.display = "flex"
+          if (screenWidth > 1100) {
+            gameContainer.style.marginLeft = "300px"
+            scoresContainer.style.width = "300px"
+          }
         }
         resolve()
       }
@@ -77,7 +110,7 @@ function setLeaderboardScores(res, loggedIn) {
 }
 
 function setUserScores(res) {
-  userScores.style.display = "block"
+  userScores.style.display = "flex"
   //console.log("Begin level " + res.userBeginner)
   let userBeginnerList = createScoreList(res.userBeginner)
   userBeginner.innerHTML = userBeginnerList
@@ -90,7 +123,7 @@ function setUserScores(res) {
 }
 
 function createScoreList(level) {
-  //console.log(level)  // undefined for user scores
+  console.log(level)  // undefined for user scores
   let list = []
   level.forEach( x => {
     //console.log(typeof x)
@@ -123,8 +156,8 @@ loginForm.addEventListener("submit", logInUser)
 function logInUser(e) {
   const username = e.target.elements[0].value
   const password = e.target.elements[1].value
-  console.log(`${username} ${password}`)
-  console.log(this.readyState + " " + this.status)
+  //console.log(`${username} ${password}`)
+  //console.log(this.readyState + " " + this.status)
   const xhttp = new XMLHttpRequest()
   xhttp.onreadystatechange = function() {
     
@@ -148,6 +181,7 @@ function logInUser(e) {
 function logoutUser(e) {
   const xhttp = new XMLHttpRequest()
   xhttp.onreadystatechange = function() {
+    //console.log(`ready: ${this.readyState}, status: ${this.status}`)
     if (this.readyState == 4 && this.status >= 400) {
       alert(this.response)
       console.log("error logging out")
@@ -160,4 +194,21 @@ function logoutUser(e) {
   xhttp.open("GET", "/logout", true)
   xhttp.send()
   e.preventDefault()
+}
+
+// responsive nav
+const nav = document.querySelector(".nav")
+const navHamburger = document.getElementById("navHamburger")
+const navLinks = document.querySelectorAll(".navLink")
+
+navHamburger.addEventListener("click", displayNav)
+navLinks.forEach( x => {
+  x.addEventListener("click", displayNav)
+})
+
+function displayNav() {
+  if (nav.className == "nav") {
+    nav.classList.add("navResponsive")
+  }
+  else nav.className = "nav"
 }

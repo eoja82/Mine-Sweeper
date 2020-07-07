@@ -3,6 +3,8 @@ let gameLevels = document.getElementById("gameLevels");
 let gameLevel = gameLevels.selectedOptions[0].value;
 gameLevels.addEventListener("change", setGameLevel);
 
+let customGameLevels = document.getElementById("customGameLevels");
+
 let width, height, 
     size = 25, mines, 
     boxesCleared = 0,
@@ -19,6 +21,10 @@ switch (gameLevel) {
     break;
   case "expert": width = 30, height = 16, mines = 99;
    break;
+  case "custom": width = parseInt(document.getElementById("selectGameWidth").value),
+  height = parseInt(document.getElementById("selectGameHeight").value),
+  mines = parseInt(document.getElementById("selectGameMines").value),
+  customGameLevels.style.display = "block"
   default:
     break;
 }
@@ -54,7 +60,9 @@ let userGame = document.getElementById("userGame");
 userGame.addEventListener("click", createUserGame);
 
 let howToPlay = document.getElementById("howToPlay");
+let closeInstructions = document.getElementById("closeInstructions")
 howToPlay.addEventListener("click", instructions);
+closeInstructions.addEventListener("click", instructions);
 
 function newGame() {
   if (grid.firstChild) {
@@ -282,7 +290,7 @@ function winGame() {
   //console.log("logged in: " + loggedIn + " user: " + user);
   let score = timer.innerText
   //console.log(`score: ${score} ${typeof score}`)
-  if (loggedIn && gameLevel !== null) {
+  if (loggedIn && gameLevel !== "custom") {
     //console.log("getScores")
     getScores(score)
   }
@@ -299,7 +307,7 @@ function getScores(score) {
     } 
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.response)
-      //console.log(res)
+      console.log(res)
       alert(res.message)
       setLeaderboardScores(res, res.loggedIn)
     }
@@ -315,16 +323,17 @@ function reset() {
   }
 }
 
-// ssets preset game level
+// sets preset game level
 function setGameLevel(e) {
   clearInterval(start);
-  //console.log(e.target.selectedOptions[0].value);
   switch (e.target.selectedOptions[0].value) {
-    case "beginner": width = 9, height = 9, mines = 5, gameLevel = "beginner";
+    case "beginner": width = 9, height = 9, mines = 5, gameLevel = "beginner", customGameLevels.style.display = "none";
       break;
-    case "intermediate": width = 16, height = 16, mines = 10, gameLevel = "intermediate";
+    case "intermediate": width = 16, height = 16, mines = 10, gameLevel = "intermediate", customGameLevels.style.display = "none";
       break;
-    case "expert": width = 30, height = 16, mines = 99, gameLevel = "expert";
+    case "expert": width = 30, height = 16, mines = 99, gameLevel = "expert", customGameLevels.style.display = "none";
+      break;
+    case "custom": gameLevel = "custom", toggleCustomGameLevels();
       break;
     default:
       break;
@@ -335,6 +344,15 @@ function setGameLevel(e) {
     x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
   });
   newGame();
+}
+
+function toggleCustomGameLevels() {
+  if (customGameLevels.style.display == "none") {
+    customGameLevels.style.display = "block"
+    customGameLevels.scrollIntoView(true)
+  } else {
+    customGameLevels.style.display = "none"
+  }
 }
 
 // creates custom game level
@@ -348,19 +366,19 @@ function createUserGame() {
   scoreboardClass.forEach( x => {
     x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
   });
-  gameLevel = null
+  //gameLevel = null
   newGame();
 }
 
 // show/hide instructions
 function instructions() {
-  let instructions = document.getElementById("instructions");
+  const instructions = document.getElementById("instructions");
   if (instructions.style.display === "none") {
     instructions.style.display = "block";
-    howToPlay.textContent = "Hide Instructions";
+    howToPlay.firstElementChild.innerHTML = "Hide Instructions<hr>";
   } else {
     instructions.style.display = "none";
-    howToPlay.textContent = "Show Instructions";
+    howToPlay.firstElementChild.innerHTML = "Show Instructions<hr>";
   }
 }
 

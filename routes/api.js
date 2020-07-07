@@ -236,18 +236,18 @@ module.exports = function(app) {
                 reject()
               } else if (!doc) {
                 console.log("could not find leaderboard")
-                reject()
+                return resolve()
               } else {
                 levelScoresLeaderboard = doc[level]
-                let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
+                //let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
                 
-                if (matchedScore){
+                /* if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score <= score){
                   newLeaderboardHighScore = false
                   leaderBeginner = doc.beginner
                   leaderIntermediate = doc.intermediate
                   leaderExpert = doc.expert
                   return resolve()
-                }
+                } */
 
                 if (levelScoresLeaderboard.length < 5) {
                   levelScoresLeaderboard.push({username: username, score: score})
@@ -257,8 +257,14 @@ module.exports = function(app) {
                   await updateLeaderBoard()
                   newLeaderboardHighScore = true
                   resolve()
+                } else if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score <= score){
+                  newLeaderboardHighScore = false
+                  leaderBeginner = doc.beginner
+                  leaderIntermediate = doc.intermediate
+                  leaderExpert = doc.expert
+                  return resolve()
                 } else {
-                  if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
+                  //if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
                     levelScoresLeaderboard.pop()
                     levelScoresLeaderboard.push({username: username, score: score})
                     levelScoresLeaderboard.sort( (a, b) => {
@@ -267,8 +273,9 @@ module.exports = function(app) {
                     await updateLeaderBoard()
                     newLeaderboardHighScore = true
                     resolve()
-                  }
+                  //}
                 }
+                
               }
               resolve()
             })
@@ -287,14 +294,14 @@ module.exports = function(app) {
                 reject()
               } else {
                 levelScoresUser = doc[level]
-                let matchedScore = levelScoresUser.some( x => x == score )
-                if (matchedScore){
+                //let matchedScore = levelScoresUser.some( x => x == score )
+                /* if (levelScoresUser[levelScoresUser.length - 1] <= score) {
                   newUserHighScore = false
                   userBeginner = doc.beginner
                   userIntermediate = doc.intermediate
                   userExpert = doc.expert
                   return resolve()
-                }
+                } */
                 if (levelScoresUser.length < 5) {
                   levelScoresUser.push(score)
                   levelScoresUser.sort( (a, b) => {
@@ -303,8 +310,14 @@ module.exports = function(app) {
                   await updateUsersScores()
                   newUserHighScore = true
                   resolve()
+                } else if (levelScoresUser[levelScoresUser.length - 1] <= score) {
+                  newUserHighScore = false
+                  userBeginner = doc.beginner
+                  userIntermediate = doc.intermediate
+                  userExpert = doc.expert
+                  return resolve()
                 } else {
-                  if (levelScoresUser[levelScoresUser.length - 1] > score) {
+                  //if (levelScoresUser[levelScoresUser.length - 1] > score) {
                     levelScoresUser.pop()
                     levelScoresUser.push(score)
                     levelScoresUser.sort( (a, b) => {
@@ -313,7 +326,7 @@ module.exports = function(app) {
                     await updateUsersScores()
                     newUserHighScore = true
                     resolve()
-                  }
+                  //}
                 }
               }
             })
@@ -331,7 +344,7 @@ module.exports = function(app) {
           //console.log("return in setting message")
           return
         }
-        //console.log(`userBeginner: ${userBeginner}`)
+        console.log(`userBeginner: ${userBeginner}, leaderBigginer: ${leaderBeginner[0].score}`)
         res.send({
           message: message,
           leaderBeginner: leaderBeginner,
@@ -345,14 +358,14 @@ module.exports = function(app) {
 
         function updateLeaderBoard() {
           return new Promise( (resolve, reject) => {
-            //console.log("updating leaderboard scores")
+            console.log("updating leaderboard scores")
             Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry, your score could not be saved to the leaderboard.")
                 reject()
               } else {
-                //console.log("updated leaderboard scores")
+                console.log("updated leaderboard scores")
                 leaderBeginner = doc.beginner
                 leaderIntermediate = doc.intermediate
                 leaderExpert = doc.expert
@@ -364,14 +377,14 @@ module.exports = function(app) {
 
         function updateUsersScores() {
           return new Promise( (resolve, reject) => {
-            //console.log("updating user scores")
+            console.log("updating user scores")
             Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry your score could not be saved.")
                 reject()
               } else {
-                //console.log("updated user score")
+                console.log("updated user score")
                 userBeginner = doc.beginner
                 userIntermediate = doc.intermediate
                 userExpert = doc.expert
