@@ -6,12 +6,13 @@ body {
   background-color: rgb(2, 2, 2);
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
-nav {
+.nav {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   justify-content: space-around;
 }
@@ -27,6 +28,9 @@ nav {
   background-color: transparent;
   margin: .75rem 0;
   transition: .3s;
+}
+#welcome {
+  cursor: default;
 }
 .navLink {
   text-decoration: none;
@@ -47,10 +51,15 @@ nav {
   width: 100%;
   visibility: visible;
 }
+#navHamburger {
+  color: rgb(190, 190, 190);
+  font-size: 1.75rem;
+  display: none;
+}
 
 #scoresContainer {
   background-color: rgb(2, 2, 2);
-  width: 150px;
+  width: 300px;
   height: calc(100vh - 54px);
   color: rgb(190, 190, 190);
   position: fixed;
@@ -58,22 +67,33 @@ nav {
   left: 0;
   overflow-x: hidden;
   margin-top: 54px;
+  display: flex;
+  flex-direction: row;
 }
 #scoresContainer h4, #scoresContainer p {
   text-align: center;
+  color: rgb(0, 193, 252);
 }
 .scoreListItem {
   list-style: decimal;
+  word-wrap: break-word;
 }
 .alignRight {
   float: right;
+}
+#leaderboard, #userScores {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+}
+#leaderboard ul, #userScores ul {
+  padding: 0 5px 0 20px;
 }
 
 #gameContainer {
   margin-left: 150px;
 }
-
-header h1 {
+h1 {
   text-align: center;
   font-family: 'Bungee Shade', cursive;
   font-size: 2.7rem;
@@ -194,19 +214,27 @@ h4 {
   margin: 1rem auto 0;
   color: rgb(190, 190, 190);
 }
+#gameContainer > h4:nth-child(5) {
+  margin-bottom: .75rem;
+  }
 #gameOptions {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   max-width: 75%;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
 }
+#customGameLevels > h4:nth-child(1) {
+  margin-bottom: .8rem;
+  }
 .gameWidth, .gameHeight, .gameMines {
   margin: 5px;
+  display: flex;
+  flex-wrap: nowrap;
 }
-#userGame, #howToPlay {
+#userGame {  /* #howToPlay */
   font-size: 1.2rem;
   border-radius: 5px;
   padding: 0 .7rem;
@@ -222,7 +250,13 @@ h4 {
   background-color: rgb(31, 201, 88);
   border: 1px solid rgb(31, 201, 88);
 }
-#howToPlay {
+#scoresNote {
+  color: rgb(190, 190, 190);
+  font-size: .75rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+/* #howToPlay {
   background-color: rgb(31, 201, 88);
   border: 1px solid rgb(31, 201, 88);
 }
@@ -230,23 +264,31 @@ h4 {
   cursor: pointer;
   background-color: rgb(0, 193, 252);
   border: 1px solid rgb(0, 193, 252);
-}
-.howTo {
+} */
+/* .howTo {
   text-align: center;
   margin: 3% 0;
-}
+} */
 #instructions {
   width: 90%;
   margin: 0 auto 3% auto;
   padding: 2%;
   background-color: rgb(255, 255, 255, .7);
+  position: relative;
+}
+#closeInstructions {
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  cursor: pointer;
+  font-size: 2rem;
 }
 
 /* login modal style */
 #loginModal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   padding-top: 100px;
   left: 0;
   top: 0;
@@ -290,6 +332,7 @@ input[type=text], input[type=password], input[type=email] {
   color: whitesmoke;
   background-color: rgb(40, 40, 40);
   border: none;
+  border-radius: 0;
   border-bottom: 1px solid rgb(31, 201, 88);
   margin-top: .7rem;
   padding-left: .4rem;
@@ -346,8 +389,8 @@ input[type=submit]:hover, input[type=submit]:focus {
   color: rgb(0, 193, 252);
 }
 
-/* create an account */
-#createAccountForm {
+/* create or delete an account */
+#createAccountForm, #deleteAccountForm {
   display: flex;
   flex-direction: column;
   max-width: 80%;
@@ -359,22 +402,22 @@ input[type=submit]:hover, input[type=submit]:focus {
   color: rgb(250, 52, 45);
   text-align: center;
 }
-#createAccountFooter {
-  text-align: center;
- /*  color: rgb(190, 190, 190); */
-}
 #privacyLink {
+  display: block;
   cursor: pointer;
+  text-align: center;
   background-color: transparent;
   border: none;
   color: rgb(190, 190, 190);
   font-size: .9rem;
   font-weight: 300;
+  text-decoration: none;
 }
 #privacyLink:hover, #privacylink:focus {
   color: rgb(0, 193, 252);
 }
 #privacyPolicy {
+  position: relative;
   width: 80%;
   background-color: rgb(190, 190, 190);
   color: black;
@@ -392,4 +435,126 @@ input[type=submit]:hover, input[type=submit]:focus {
 }
 #privacyPolicy h3:last-child {
   padding-bottom: 1rem;
+}
+#closePrivacyPolicy {
+  position: absolute;
+  top: -5px;
+  right: 5px;
+  cursor: pointer;
+  font-size: 2rem;
+}
+#deleteAccountForm {
+  margin-bottom: 3rem;
+}
+#deleteAccountSubmit {
+  background-color: rgb(250, 52, 45);
+  border-color: rgb(250, 52, 45);
+}
+#deleteAccountSubmit:hover, #deleteAccountSubmit:focus {
+  background-color: rgb(0, 193, 252);
+  border-color: rgb(0, 193, 252);
+}
+
+@media only screen and (max-width: 1100px) {
+  #scoresContainer {
+    /* background-color: rgb(2, 2, 2); */
+    width: 95%;
+    height: auto;
+    /* color: rgb(190, 190, 190); */
+    position: unset;
+    top: unset;
+    left: unset;
+    overflow-x: unset;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  #scoresContainer h4, #scoresContainer p {
+    text-align: center;
+    color: rgb(0, 193, 252);
+  }
+  .scores {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  .scoresDiv {
+    width: 150px;
+    margin: 0 .5rem;
+  }
+  #leaderboard, #userScores {
+    max-width: unset;
+    width: 100%;
+    /* display: flex;
+    flex-direction: column; */
+    padding: 0 .75rem;
+  }
+  #leaderboard h4, #userScores h4 {
+    margin: 1rem auto auto;
+  }
+  /* #leaderboard ul {
+    padding: 0 5px 0 20px;
+  } */
+  #gameContainer {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .nav button:not(:first-child) {
+    display: none;
+  }
+  .nav {
+    width: 100%;
+    position: relative;
+    flex-direction: column;
+    z-index: 1;
+    background-color: rgb(2, 2, 2);
+  }
+  .navLink hr {
+    display: none;
+  }
+  #navHamburger {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 7px;
+  }
+  .nav.navResponsive button {
+    display: block;
+    width: 100%;
+  }
+  #game {
+    margin-left: .5rem;
+    margin-right: .5rem;
+  }
+  #game, #scoresContainer {
+    overflow-y: scroll;
+  }
+}
+@media only screen and (max-width: 900px) {
+  #loginModal {
+    padding-top: 10px;
+  }
+}
+@media only screen and (max-width: 440px) {
+  .navButton, #welcome {
+    font-size: 1rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  /* #loginModal {
+    padding-top: 10px;
+  } */
+  .modalContent {
+    width: 90%;
+  }
+  .modalHeader h3 {
+    margin: .3rem;
+  }
 }
