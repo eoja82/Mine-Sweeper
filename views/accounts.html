@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Minesweeper Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="../public/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <button class="navButton">
+      <a class="navLink" href="/">Home<hr></a>
+    </button>
+  </nav>
+  <div id="createAccountContainer">
+    <h1>Create An account</h1>
+    <form id="createAccountForm" autocomplete="off">
+      <input type="text" name="username" placeholder="Username" maxlength="20" required>
+      <input type="email" name="email" placeholder="Email">
+      <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 
+      <input type="password" name="passwordAgain" placeholder="Confirm Password" required>
+      <div id="errorDiv"></div>
+      <input type="submit" value="Create Account">
+    </form>
+    <a href="#privacyPolicy" id="privacyLink">Privacy Policy</a>
+    <div id="privacyPolicy" style="display: none;">
+      <div id="closePrivacyPolicy">&times</div>
+      <h3>Your information will not be sold or shared with any person or company.</h3>
+      <h3>Your email addres will only be used to help reset your password if you forget it and to notify you should the privacy policy change.</h3>
+      <h3>This privacy policy may be amended.  If at any time you do not agree with the terms herein you may delete your account.</h3>
+    </div>
+  </div>
+  <div id="deleteAccountContainer">
+    <h1>Delete Your Account</h1>
+    <form id="deleteAccountForm" autocomplete="off">
+      <input type="text" name="username" placeholder="Username" maxlength="20" required>
+      <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 
+      <!-- <input type="checkbox" name="cantBeUndone" required> -->
+      <label for="cantBeUndone">
+        <input type="checkbox" name="cantBeUndone" required>
+        I understand that deleteing my account will erase all of my scores and cannot be undone.
+      </label>
+      <div id="errorDiv"></div>
+      <input type="submit" value="Delete Account" id="deleteAccountSubmit">
+    </form>
+  </div>
+
+  <script src="../public/accounts.js"></script>
+</body>
+</html>

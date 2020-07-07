@@ -53,9 +53,9 @@ app.route("/")
     res.send({loggedIn: req.session.loggedIn})
   }) */
 
-app.route("/createaccount")
+app.route("/accounts")
   .get(function(req, res) {
-    res.sendFile(process.cwd() + "/views/createAccount.html");
+    res.sendFile(process.cwd() + "/views/accounts.html");
   });
 
 //Routing for API 

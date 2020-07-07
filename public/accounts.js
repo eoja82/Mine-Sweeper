@@ -3,13 +3,16 @@ const errorDiv = document.getElementById("errorDiv")
 const privacyPolicy = document.getElementById("privacyPolicy")
 const privacyLink = document.getElementById("privacyLink")
 //console.log(privacyPolicy)
+const closePrivacyPolicy = document.getElementById("closePrivacyPolicy")
+
 privacyLink.addEventListener("click", displayPolicy)
+closePrivacyPolicy.addEventListener("click", displayPolicy)
 
 function displayPolicy() {
-  if (privacyPolicy.style.height == "0px") {
-    privacyPolicy.style.height = "177px"
+  if (privacyPolicy.style.display == "none") {
+    privacyPolicy.style.display = "block"
   } else {
-    privacyPolicy.style.height = "0px"
+    privacyPolicy.style.display = "none"
   }
 }
 
@@ -22,6 +25,11 @@ function createNewUserAccount(e) {
         email = formData[1].value,
         password = formData[2].value,
         passwordAgain = formData[3].value
+
+  if (typeof username == "number" && username.length > 20) {
+    errorDiv.innerHTML = "Username max length is 20 characters."
+    return
+  }
 
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
