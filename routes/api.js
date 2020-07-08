@@ -102,7 +102,8 @@ module.exports = function(app) {
       })
     })
 
-  app.route("/createaccount/newuser")
+  // create new user account
+  app.route("/accounts/newuser")
     .post(function(req, res) {
       //console.log(req.body)
       const username = req.body.username,
@@ -161,6 +162,124 @@ module.exports = function(app) {
       })
     })
 
+  // delete user account
+  app.route("/accounts/deleteuser")
+    .delete(async function(req, res) {
+      const username = req.body.username,
+            password = req.body.password
+      console.log(`${username} ${password}`)
+      let user,
+          passwordMatch,
+          userDeleted,
+          userDeletedDoc,
+          leaderboadScoresDeleted
+
+
+      await verifyAccount()
+
+      if (user) {
+        if (passwordMatch) {
+          await deleteAccount() 
+          if (userDeleted) {
+            await deleteUserLeaderboardScores()
+            if (leaderboadScoresDeleted) {
+              req.session.destroy()
+              res.status(307).send(`Sorry to see you go! Your account for ${username} has been deleted.`)
+            } else {
+              // reset account if there was an error deleteing scores from the leaderboard
+              const options = {new: true, upsert: true}
+              //req.session.loggedIn = true
+              //req.session.username = username
+              Users.findOneAndUpdate({username: userDeletedDoc.username}, userDeletedDoc, options, function(err, doc) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log(`reset doc: ${doc}`)
+                }
+              })
+              res.status(200).send(`Error: could not delete ${username}'s account.`)
+            }
+          } else {
+            res.status(200).send("Error: could not delete account")
+          }
+        } else {
+          res.status(200).send("Incorrect password.")
+        }
+      } else {
+        res.status(200).send(`Username ${username} does not exist.`)
+      }
+
+      function verifyAccount() {
+        return new Promise( (resolve, reject) => {
+          // check if password is correct
+          Users.findOne({username: username}, function(err, doc) {
+            if (err) {
+              console.log(err)
+              res.send("Error: could not delete account.")
+              reject()
+            } else if (!doc) {
+              console.log("no user")
+              user = false
+              resolve()
+            } else {
+              console.log("found user")
+              user = true
+              bcrypt.compare(password, doc.hash, async function(err, result) {
+                if (result) {
+                  console.log("password match")
+                  passwordMatch = true          
+                  resolve()
+                } else {
+                  console.log("password does not match")
+                  passwordMatch = false
+                  resolve()
+                }
+              })
+            }
+          })
+        })
+      }
+
+      function deleteAccount() {
+        return new Promise( (resolve, reject) => {
+          Users.findOneAndDelete({username: username}, function(err, doc) {
+            if (err) {
+              console.log(err)
+              userDeleted = false
+              reject()
+            } else {
+              console.log("account deleted")
+              userDeleted = true
+              //req.session.destroy()
+              resolve()
+            }
+          })
+        })
+      }
+
+      function deleteUserLeaderboardScores() {
+        const updates = {
+          $pull: {
+            beginner: {username: username},
+            intermediate: {username: username},
+            expert: {username: username}
+          }
+        }
+        return new Promise( (resolve, reject) => {
+          Leaderboard.updateOne({name: "leaderboard"}, updates, function(err, doc) {
+            if (err) {
+              console.log(err)
+              leaderboadScoresDeleted = false
+              reject()
+            } else {
+              console.log("deleted leaderboard scores")
+              leaderboadScoresDeleted = true
+              resolve()
+            }
+          })
+        })
+      }
+    }) 
 
   // login user
   app.route("/login")
@@ -176,9 +295,10 @@ module.exports = function(app) {
         } else if (!user) {
           res.send(`${username} is not a valid username.`)
         } else {
-          console.log("checking hash")
+          //console.log("checking hash")
           bcrypt.compare(password, user.hash, function(err, result) {
             if (result) {
+              console.log("password match on log in")
               req.session.loggedIn = true
               req.session.username = username
               res.status(307).send({loggedIn: true, location: "/"})
@@ -239,16 +359,6 @@ module.exports = function(app) {
                 return resolve()
               } else {
                 levelScoresLeaderboard = doc[level]
-                //let matchedScore = levelScoresLeaderboard.some( x => x.score == score )
-                
-                /* if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score <= score){
-                  newLeaderboardHighScore = false
-                  leaderBeginner = doc.beginner
-                  leaderIntermediate = doc.intermediate
-                  leaderExpert = doc.expert
-                  return resolve()
-                } */
-
                 if (levelScoresLeaderboard.length < 5) {
                   levelScoresLeaderboard.push({username: username, score: score})
                   levelScoresLeaderboard.sort( (a, b) => {
@@ -264,7 +374,6 @@ module.exports = function(app) {
                   leaderExpert = doc.expert
                   return resolve()
                 } else {
-                  //if (levelScoresLeaderboard[levelScoresLeaderboard.length - 1].score > score) {
                     levelScoresLeaderboard.pop()
                     levelScoresLeaderboard.push({username: username, score: score})
                     levelScoresLeaderboard.sort( (a, b) => {
@@ -273,7 +382,6 @@ module.exports = function(app) {
                     await updateLeaderBoard()
                     newLeaderboardHighScore = true
                     resolve()
-                  //}
                 }
                 
               }
@@ -294,14 +402,6 @@ module.exports = function(app) {
                 reject()
               } else {
                 levelScoresUser = doc[level]
-                //let matchedScore = levelScoresUser.some( x => x == score )
-                /* if (levelScoresUser[levelScoresUser.length - 1] <= score) {
-                  newUserHighScore = false
-                  userBeginner = doc.beginner
-                  userIntermediate = doc.intermediate
-                  userExpert = doc.expert
-                  return resolve()
-                } */
                 if (levelScoresUser.length < 5) {
                   levelScoresUser.push(score)
                   levelScoresUser.sort( (a, b) => {
@@ -317,7 +417,6 @@ module.exports = function(app) {
                   userExpert = doc.expert
                   return resolve()
                 } else {
-                  //if (levelScoresUser[levelScoresUser.length - 1] > score) {
                     levelScoresUser.pop()
                     levelScoresUser.push(score)
                     levelScoresUser.sort( (a, b) => {
@@ -326,7 +425,6 @@ module.exports = function(app) {
                     await updateUsersScores()
                     newUserHighScore = true
                     resolve()
-                  //}
                 }
               }
             })
@@ -336,15 +434,15 @@ module.exports = function(app) {
         //console.log(`user high: ${newLeaderboardHighScore}, leaderHigh: ${newLeaderboardHighScore}`)
         if (newUserHighScore && newLeaderboardHighScore) {
           //console.log("new leader and user high score")
-          message = `Congratulations, you made the Leaderboard and have a new personal high score for the ${level} level!`
+          message = `Congratulations, you're on the Leaderboard and have a new personal top 10 score for the ${level} level!`
         } else if (newUserHighScore && !newLeaderboardHighScore) {
           //console.log("new user high score")
-          message = `Congratulations, you have a new personal high score for the ${level} level.`
+          message = `Congratulations, you have a new personal top 10 score for the ${level} level.`
         } else {
           //console.log("return in setting message")
           return
         }
-        console.log(`userBeginner: ${userBeginner}, leaderBigginer: ${leaderBeginner[0].score}`)
+        //console.log(`userBeginner: ${userBeginner}, leaderBigginer: ${leaderBeginner[0].score}`)
         res.send({
           message: message,
           leaderBeginner: leaderBeginner,
@@ -358,14 +456,14 @@ module.exports = function(app) {
 
         function updateLeaderBoard() {
           return new Promise( (resolve, reject) => {
-            console.log("updating leaderboard scores")
+            //console.log("updating leaderboard scores")
             Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry, your score could not be saved to the leaderboard.")
                 reject()
               } else {
-                console.log("updated leaderboard scores")
+                //console.log("updated leaderboard scores")
                 leaderBeginner = doc.beginner
                 leaderIntermediate = doc.intermediate
                 leaderExpert = doc.expert
@@ -377,14 +475,14 @@ module.exports = function(app) {
 
         function updateUsersScores() {
           return new Promise( (resolve, reject) => {
-            console.log("updating user scores")
+            //console.log("updating user scores")
             Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry your score could not be saved.")
                 reject()
               } else {
-                console.log("updated user score")
+                //console.log("updated user score")
                 userBeginner = doc.beginner
                 userIntermediate = doc.intermediate
                 userExpert = doc.expert

@@ -398,7 +398,7 @@ input[type=submit]:hover, input[type=submit]:focus {
   justify-content: center;
   align-items: center;
 }
-#errorDiv {
+#createErrorMessage, #deleteErrorMessage {
   color: rgb(250, 52, 45);
   text-align: center;
 }
@@ -453,6 +453,9 @@ input[type=submit]:hover, input[type=submit]:focus {
 #deleteAccountSubmit:hover, #deleteAccountSubmit:focus {
   background-color: rgb(0, 193, 252);
   border-color: rgb(0, 193, 252);
+}
+label[for="cannotBeUndone"] {
+  padding-top: .5rem;
 }
 
 @media only screen and (max-width: 1100px) {

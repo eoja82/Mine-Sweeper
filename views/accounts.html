@@ -21,7 +21,7 @@
       <input type="email" name="email" placeholder="Email">
       <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 
       <input type="password" name="passwordAgain" placeholder="Confirm Password" required>
-      <div id="errorDiv"></div>
+      <div id="createErrorMessage"></div>
       <input type="submit" value="Create Account">
     </form>
     <a href="#privacyPolicy" id="privacyLink">Privacy Policy</a>
@@ -38,11 +38,11 @@
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
       <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 
       <!-- <input type="checkbox" name="cantBeUndone" required> -->
-      <label for="cantBeUndone">
-        <input type="checkbox" name="cantBeUndone" required>
+      <label for="cannotBeUndone">
+        <input type="checkbox" name="cannotBeUndone" required>
         I understand that deleteing my account will erase all of my scores and cannot be undone.
       </label>
-      <div id="errorDiv"></div>
+      <div id="deleteErrorMessage"></div>
       <input type="submit" value="Delete Account" id="deleteAccountSubmit">
     </form>
   </div>
