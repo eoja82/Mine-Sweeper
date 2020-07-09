@@ -102,8 +102,15 @@ module.exports = function(app) {
       })
     })
 
+  // if !loggedIn hide delete account, if loggedIn hide create account
+  app.route("/init/accounts")
+    .get(function(req, res) {
+      res.send({loggedIn: req.session.loggedIn})
+    })
+
   // create new user account
-  app.route("/accounts/newuser")
+  //app.route("/accounts/newuser")
+  app.route("/accounts/useraccount")
     .post(function(req, res) {
       //console.log(req.body)
       const username = req.body.username,
@@ -162,8 +169,53 @@ module.exports = function(app) {
       })
     })
 
+    // change users' password
+    .put(function(req, res) {
+      console.log(req.body)
+      const username = req.session.username,
+            oldPassword = req.body.oldPassword,
+            newPassword = req.body.newPassword
+      console.log(newPassword)
+      // find user
+      // check old password
+      // hash new password if match
+      // update password
+      Users.findOne({username: username}, function(err, doc) {
+        if (err) {
+          console.log(err)
+          res.send("Error: could not change password.")
+        } else if (!doc) {
+          res.status(100).send(`Could not find an account for ${username}.`)
+        } else {
+          bcrypt.compare(oldPassword, doc.hash, function(err, result) {
+            if (result) {
+              bcrypt.hash(newPassword, 12, function(err, newHash) {
+                if (err) {
+                  console.log(err)
+                  res.status(400).send("Error: could not change password.")
+                } else {
+                  Users.findOneAndUpdate({username: username}, {hash: newHash}, {new: true}, function(err, doc) {
+                    if (err) {
+                      console.log(err)
+                      res.status(400).send("Error: could not change password.")
+                    } else {
+                      res.send("Your password has been changed!")
+                    }  
+                  })
+                }
+              })
+            } else {
+              res.status(100).send("Old password is incorrect.")
+            }
+          })
+        }
+      })
+
+
+    })
+
   // delete user account
-  app.route("/accounts/deleteuser")
+ // app.route("/accounts/deleteuser")
     .delete(async function(req, res) {
       const username = req.body.username,
             password = req.body.password

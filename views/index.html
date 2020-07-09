@@ -8,16 +8,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
   <link rel="stylesheet" href="../public/style.css">
 </head>
 <body>
   <nav class="nav">
-    <button id="welcome"></button>
+    <div id="userNavDropDown">
+      <button id="welcome"><span></span><i id="navChevron" class="fas fa-chevron-down"></i></button>
+      <div id="userNavLinks" style="display: none;">
+        <a href="/accounts" class="navLink">Account</a>
+        <a href="javascript:void(0)"id="navLogout" class="navLink">Log Out</a>
+      </div>
+    </div>
     <button class="navButton" id="howToPlay">
       <a href="#instructions" class="navLink">Show Instructions<hr></a>
     </button>
-    <button class="navButton">
-      <a href="javascript:void(0)" id="navLogin" class="navLink">Log In<hr></a>
+    <button id="navLogin" class="navButton">
+      <a href="javascript:void(0)" class="navLink">Log In<hr></a>
     </button>
     <button class="navButton" id="navCreateAccount">
       <a href="/accounts" class="navLink">Create An Account<hr></a>
