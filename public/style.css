@@ -32,6 +32,32 @@ body {
 #welcome {
   cursor: default;
 }
+#navChevron {
+  color: rgb(190, 190, 190);
+  padding-left: .75rem;
+  font-size: 1.1rem;
+}
+#userNavLinks {
+  color: white;
+  text-align: center;
+  background-color: rgb(71, 70, 70);
+  /* padding: .25rem; */
+  position: absolute;
+  min-width: 150px;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+  z-index: 99;
+}
+/* #userNavLinks a:first-of-type {
+  padding: .25rem 0 0;
+} */
+#userNavLinks a {
+  padding: .35rem 0;
+}
+#userNavLinks a:hover {
+  background-color: rgb(112, 108, 108);
+}
 .navLink {
   text-decoration: none;
   color: inherit;
@@ -390,7 +416,7 @@ input[type=submit]:hover, input[type=submit]:focus {
 }
 
 /* create or delete an account */
-#createAccountForm, #deleteAccountForm {
+#createAccountForm, #changePasswordForm, #deleteAccountForm {
   display: flex;
   flex-direction: column;
   max-width: 80%;
@@ -398,7 +424,7 @@ input[type=submit]:hover, input[type=submit]:focus {
   justify-content: center;
   align-items: center;
 }
-#createErrorMessage, #deleteErrorMessage {
+#createErrorMessage, #changePasswordErrorMessage, #deleteErrorMessage {
   color: rgb(250, 52, 45);
   text-align: center;
 }
@@ -530,6 +556,7 @@ label[for="cannotBeUndone"] {
   .nav.navResponsive button {
     display: block;
     width: 100%;
+    text-align: left;
   }
   #game {
     margin-left: .5rem;
