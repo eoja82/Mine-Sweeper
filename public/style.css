@@ -29,9 +29,6 @@ body {
   margin: .75rem 0;
   transition: .3s;
 }
-#welcome {
-  cursor: default;
-}
 #navChevron {
   color: rgb(190, 190, 190);
   padding-left: .75rem;
@@ -54,10 +51,11 @@ body {
 } */
 #userNavLinks a {
   padding: .35rem 0;
+  margin: 0 auto;
 }
-#userNavLinks a:hover {
+/* #userNavLinks a:hover {
   background-color: rgb(112, 108, 108);
-}
+} */
 .navLink {
   text-decoration: none;
   color: inherit;
@@ -409,14 +407,20 @@ input[type=submit]:hover, input[type=submit]:focus {
   color: rgb(190, 190, 190);
   transition: .3s;
 }
-#createAccount:hover, #noAccount:hover, #createAccount:focus, #noAccount:focus {
+#createAccount:hover, 
+#noAccount:hover, 
+#createAccount:focus, 
+#noAccount:focus {
   cursor: pointer;
   border: 1px solid rgb(0, 193, 252);
   color: rgb(0, 193, 252);
 }
 
-/* create or delete an account */
-#createAccountForm, #changePasswordForm, #deleteAccountForm {
+/* create/delete an account, edit email or change password*/
+#createAccountForm, 
+#changePasswordForm, 
+#editEmailForm,
+#deleteAccountForm {
   display: flex;
   flex-direction: column;
   max-width: 80%;
@@ -424,9 +428,17 @@ input[type=submit]:hover, input[type=submit]:focus {
   justify-content: center;
   align-items: center;
 }
-#createErrorMessage, #changePasswordErrorMessage, #deleteErrorMessage {
+#createErrorMessage, 
+#changePasswordErrorMessage,
+#editEmailErrorMessage, 
+#deleteErrorMessage {
   color: rgb(250, 52, 45);
   text-align: center;
+}
+#email {
+  color: rgb(190, 190, 190);
+  text-align: center;
+  margin: 0;
 }
 #privacyLink {
   display: block;

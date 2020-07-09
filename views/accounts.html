@@ -15,7 +15,7 @@
     </button>
   </nav>
   <div id="createAccountContainer" style="display: none;">
-    <h1>Create An account</h1>
+    <h1 class="accountHeader">Create An account</h1>
     <form id="createAccountForm" autocomplete="off">
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
       <input type="email" name="email" placeholder="Email">
@@ -32,8 +32,19 @@
       <h3>This privacy policy may be amended.  If at any time you do not agree with the terms herein you may delete your account.</h3>
     </div>
   </div>
+  <div id="editEmailContainer" style="display: none;">
+    <h1 class="accountHeader">Change Or Add Email</h1>
+    <p id="email">Email: <span id="currentEmail"></span></p>
+    <form id="editEmailForm" autocomplete="off">
+      <input type="email" name="newEmail" placeholder="New Email" required>
+      <input type="email" name="confirmNewEmail" placeholder="Confirm New Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <div id="editEmailErrorMessage"></div>
+      <input type="submit" value="Edit Email" id="editEmailSubmit">
+    </form>
+  </div>
   <div id="changePasswordContainer" style="display: none;">
-    <h1>Change Your Password</h1>
+    <h1 class="accountHeader">Change Password</h1>
     <form id="changePasswordForm" autocomplete="off">
       <!-- <input type="text" name="username" placeholder="Username" maxlength="20" required> -->
       <input type="password" name="oldPassword" placeholder="Old Password" required autocomplete="new-password"> 
@@ -44,7 +55,7 @@
     </form>
   </div>
   <div id="deleteAccountContainer" style="display: none;">
-    <h1>Delete Your Account</h1>
+    <h1 class="accountHeader">Delete Account</h1>
     <form id="deleteAccountForm" autocomplete="off">
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
       <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 

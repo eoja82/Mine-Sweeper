@@ -8,8 +8,13 @@ const createAccountForm = document.getElementById("createAccountForm"),
       createAccountContainer = document.getElementById("createAccountContainer"),
       deleteAccountContainer = document.getElementById("deleteAccountContainer"),
       changePasswordContainer = document.getElementById("changePasswordContainer"),
-      changePasswordForm = document.getElementById("changePasswordForm")
-      changePasswordErrorMessage = document.getElementById("changePasswordErrorMessage")
+      changePasswordForm = document.getElementById("changePasswordForm"),
+      changePasswordErrorMessage = document.getElementById("changePasswordErrorMessage"),
+      editEmailContainer = document.getElementById("editEmailContainer"),
+      editEmailform = document.getElementById("editEmailForm"),
+      editEmailSubmit = document.getElementById("editEmailSubmit"),
+      editEmailErrorMessage = document.getElementById("editEmailErrorMessage"),
+      currentEmail = document.getElementById("currentEmail")
 let loggedIn
 
 // if !loggedIn hide delete account, if loggedIn hide create account
@@ -27,14 +32,16 @@ function getLoginStatus() {
       } 
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.response)
-        console.log(res.loggedIn)
         loggedIn = res.loggedIn
         if (loggedIn) {
           createAccountContainer.style.display = "none"
+          editEmailContainer.style.display = "block"
           changePasswordContainer.style.display = "block"
           deleteAccountContainer.style.display = "block"
+          currentEmail.innerHTML = res.email
         } else {
           createAccountContainer.style.display = "block"
+          editEmailContainer.style.display = "none"
           changePasswordContainer.style.display = "none"
           deleteAccountContainer.style.display = "none"
         }
@@ -94,6 +101,40 @@ function createNewUserAccount(e) {
   e.preventDefault()
 }
 
+// edit email
+editEmailform.addEventListener("submit", editUserEmail)
+
+function editUserEmail(e) {
+  e.preventDefault()
+  const formData = e.target.elements
+        newEmail = formData[0].value,
+        confirmNewEmail = formData[1].value,
+        password = formData[2].value
+        xhttp = new XMLHttpRequest()
+  console.log(newEmail == confirmNewEmail)
+  if (newEmail != confirmNewEmail) {
+    editEmailErrorMessage.innerHTML = "Emails do not match."
+    return
+  } else {
+    xhttp.onreadystatechange = function() {
+      console.log(`${this.readyState} ${this.status}`)
+      if (this.readyState == 4 && this.status >= 400) {
+          editEmailErrorMessage.innerHTML = this.response
+          //editEmailForm.reset()
+      } 
+      if (this.readyState == 4 && this.status == 200) {
+        alert(this.response)
+        editEmailForm.reset()
+        editEmailErrorMessage.innerHTML = ""
+      }
+    }
+    xhttp.open("PUT", "/accounts/useraccount", true)
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+    xhttp.send(`newEmail=${newEmail}&password=${password}`)
+  }
+
+}
+
 // change password
 changePasswordForm.addEventListener("submit", changeUserPassword)
 
@@ -105,7 +146,7 @@ function changeUserPassword(e) {
         newPassword = formData[1].value,
         confirmNewPassword = formData[2].value
         xhttp = new XMLHttpRequest()
-  console.log(newPassword)
+  
   if (oldPassword == newPassword) {
     changePasswordErrorMessage.innerHTML = "New password must be different than old password."
     return
@@ -114,18 +155,19 @@ function changeUserPassword(e) {
     return
   } else {
     xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status >= 400 ||
-        this.readyState == 4 && this.status == 100) {
+      //console.log(`${this.readyState} ${this.status}`)
+      if (this.readyState == 4 && this.status >= 400) {
           changePasswordErrorMessage.innerHTML = this.response
       } 
       if (this.readyState == 4 && this.status == 200) {
         alert(this.response)
         changePasswordForm.reset()
+        changePasswordErrorMessage.innerHTML = ""
       }
     }
-    xhttp.open("PUT", "/accounts/useraccount", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`oldPassword=${oldPassword}&newPassword=${newPassword}`);
+    xhttp.open("PUT", "/accounts/useraccount", true)
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+    xhttp.send(`oldPassword=${oldPassword}&newPassword=${newPassword}`)
   } 
   /* e.preventDefault() */
 }

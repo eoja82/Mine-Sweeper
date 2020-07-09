@@ -105,7 +105,20 @@ module.exports = function(app) {
   // if !loggedIn hide delete account, if loggedIn hide create account
   app.route("/init/accounts")
     .get(function(req, res) {
-      res.send({loggedIn: req.session.loggedIn})
+      //res.send({loggedIn: req.session.loggedIn})
+      Users.findOne({username: req.session.username}, function(err, doc) {
+        if (err) {
+          console.log(err) 
+          res.status(200).send({loggedIn: req.session.loggedIn})
+        } else {
+          if (!doc) {
+            console.log("Could not get users' email.")
+            res.status(200).send({loggedIn: req.session.loggedIn})
+          } else {
+            res.send({loggedIn: req.session.loggedIn, email: doc.email})
+          }
+        }
+      })
     })
 
   // create new user account
@@ -169,53 +182,115 @@ module.exports = function(app) {
       })
     })
 
-    // change users' password
-    .put(function(req, res) {
-      console.log(req.body)
+    // change users' password or email
+    .put(async function(req, res) {
       const username = req.session.username,
+            newEmail = req.body.newEmail,
+            password = req.body.password,
             oldPassword = req.body.oldPassword,
             newPassword = req.body.newPassword
-      console.log(newPassword)
-      // find user
-      // check old password
-      // hash new password if match
-      // update password
-      Users.findOne({username: username}, function(err, doc) {
-        if (err) {
-          console.log(err)
-          res.send("Error: could not change password.")
-        } else if (!doc) {
-          res.status(100).send(`Could not find an account for ${username}.`)
+      let emailInUse
+      //console.log(newEmail + " " + password)
+      // if req includes newEmail update email, else change passowrd
+      if (newEmail) {
+        //console.log("in email")
+        // check if there is an account already with the new email
+        await checkIfEmailInUse()
+
+        function checkIfEmailInUse() {
+          //console.log("checking if email in use")
+          return new Promise( (resolve, reject) => {
+            Users.findOne({email: newEmail}, function(err, doc) {
+              if (err) {
+                console.log(err)
+                res.send("Error: could not edit email.")
+                reject()
+              } else if (!doc) {
+                //console.log("email not in use")
+                emailInUse = false
+                resolve()
+              } else {
+                //console.log("email in use")
+                emailInUse = true
+                resolve()
+              }
+            })
+          })
+        }
+
+        if (emailInUse) {
+          //console.log("should be sending message email in use")
+          res.status(500).send(`An account already exists with the email ${newEmail}`)
         } else {
-          bcrypt.compare(oldPassword, doc.hash, function(err, result) {
-            if (result) {
-              bcrypt.hash(newPassword, 12, function(err, newHash) {
+          //console.log("finding user")
+          Users.findOne({username: username}, function(err, doc) {
+            if (err) {
+              console.log(err)
+              res.send("Error: could not edit email.")
+            } else if (!doc) {
+              res.status(500).send(`There was an error finding an account for ${username}.`)
+            } else {
+              //console.log("checking hash")
+              bcrypt.compare(password, doc.hash, function(err, result) {
                 if (err) {
                   console.log(err)
-                  res.status(400).send("Error: could not change password.")
-                } else {
-                  Users.findOneAndUpdate({username: username}, {hash: newHash}, {new: true}, function(err, doc) {
+                  res.status(500).send("An error occured while trying to confirm your password.")
+                } else if (result) {
+                  //console.log("password is good")
+                  Users.findOneAndUpdate({username: username}, {email: newEmail}, {new: true}, function(err, doc) {
                     if (err) {
                       console.log(err)
-                      res.status(400).send("Error: could not change password.")
+                      res.send("An error occured, your email was not updated.")
+                    } else if (!doc) {
+                      res.status(500).send("Something went wrong, your email was not updated.")
                     } else {
-                      res.send("Your password has been changed!")
-                    }  
+                      res.send(`Your email address was changed to ${newEmail}`)
+                    }
                   })
+                } else {
+                  //console.log("password wrong")
+                  res.status(500).send("Your password is incorrect.")
                 }
               })
-            } else {
-              res.status(100).send("Old password is incorrect.")
             }
           })
         }
-      })
-
-
+      } else {
+        Users.findOne({username: username}, function(err, doc) {
+          if (err) {
+            console.log(err)
+            res.send("Error: could not change password.")
+          } else if (!doc) {
+            res.status(500).send(`Could not find an account for ${username}.`)
+          } else {
+            bcrypt.compare(oldPassword, doc.hash, function(err, result) {
+              if (result) {
+                bcrypt.hash(newPassword, 12, function(err, newHash) {
+                  if (err) {
+                    console.log(err)
+                    res.status(400).send("Error: could not change password.")
+                  } else {
+                    Users.findOneAndUpdate({username: username}, {hash: newHash}, {new: true}, function(err, doc) {
+                      if (err) {
+                        console.log(err)
+                        res.status(400).send("Error: could not change password.")
+                      } else {
+                        res.send("Your password has been changed!")
+                      }  
+                    })
+                  }
+                })
+              } else {
+                //console.log("should be sending old password wrong")
+                res.status(500).send("Old password is incorrect.")
+              }
+            })
+          }
+        })
+      } 
     })
 
   // delete user account
- // app.route("/accounts/deleteuser")
     .delete(async function(req, res) {
       const username = req.body.username,
             password = req.body.password
