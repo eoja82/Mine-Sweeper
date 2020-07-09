@@ -1,22 +1,24 @@
-const loginModal = document.getElementById("loginModal")
-//const close = document.getElementById("close")
-const noAccount = document.getElementById("noAccount")
-//const login = document.getElementById("login")
-const loginForm = document.getElementById("loginForm")
-const navLogin = document.getElementById("navLogin")
-const navCreateAccount = document.getElementById("navCreateAccount")
-const leaderBegginer = document.getElementById("leaderBeginner")
-const leaderIntermediate = document.getElementById("leaderIntermediate")
-const leaderExpert = document.getElementById("leaderExpert")
-const userScores = document.getElementById("userScores")
-const userBeginner = document.getElementById("userBeginner")
-const userIntermediate = document.getElementById("userIntermediate")
-const userExpert = document.getElementById("userExpert")
-const welcome = document.getElementById("welcome")
-const navButtons = document.querySelectorAll(".navButton")
-const gameContainer = document.getElementById("gameContainer")
-const scoresContainer = document.getElementById("scoresContainer")
-const leaderboard = document.getElementById("leaderboard")
+const loginModal = document.getElementById("loginModal"),
+      noAccount = document.getElementById("noAccount"),
+      loginForm = document.getElementById("loginForm"),
+      navLogin = document.getElementById("navLogin"),
+      navLogout = document.getElementById("navLogout"),
+      navCreateAccount = document.getElementById("navCreateAccount"),
+      leaderBegginer = document.getElementById("leaderBeginner"),
+      leaderIntermediate = document.getElementById("leaderIntermediate"),
+      leaderExpert = document.getElementById("leaderExpert"),
+      userScores = document.getElementById("userScores"),
+      userBeginner = document.getElementById("userBeginner"),
+      userIntermediate = document.getElementById("userIntermediate"),
+      userExpert = document.getElementById("userExpert"),
+      welcome = document.getElementById("welcome"),
+      userNavLinks = document.getElementById("userNavLinks"),
+      navChevron = document.getElementById("navChevron"),
+      navButtons = document.querySelectorAll(".navButton"),
+      gameContainer = document.getElementById("gameContainer"),
+      scoresContainer = document.getElementById("scoresContainer"),
+      leaderboard = document.getElementById("leaderboard"),
+      changePasswordContainer = document.getElementById("changePasswordContainer")
 let loggedIn,
     user,
     screenWidth
@@ -66,9 +68,12 @@ function getScoresLoginStatus() {
         if (!loggedIn) {
           displayModal()
           welcome.style.display = "none"
-          navLogin.childNodes[0].nodeValue = "Log In"
+          welcome.removeEventListener("click", handleUserNavLinks)
+          //navLogin.childNodes[0].nodeValue = "Log In"
           navLogin.addEventListener("click", displayModal)
-          navLogin.removeEventListener("click", logoutUser)
+          navLogin.style.display = "block"
+          //navLogin.removeEventListener("click", logoutUser)
+          navLogout.removeEventListener("click", logoutUser)
           navCreateAccount.style.display = "block"
           userScores.style.display = "none"
           if (screenWidth > 1100) {
@@ -80,10 +85,14 @@ function getScoresLoginStatus() {
         if (loggedIn) {
           //console.log("logged In")
           welcome.style.display = "block"
-          welcome.innerText = `Welcome, ${user}!`
-          navLogin.childNodes[0].nodeValue = "Log Out"
+          welcome.childNodes[0].innerText = `Welcome, ${user}!`
+          welcome.addEventListener("click", handleUserNavLinks)
+          console.log(welcome.childNodes[0])
+          //navLogin.childNodes[0].nodeValue = "Log Out"
           navLogin.removeEventListener("click", displayModal)
-          navLogin.addEventListener("click", logoutUser)
+          navLogin.style.display = "none"
+          //navLogin.addEventListener("click", logoutUser)
+          navLogout.addEventListener("click", logoutUser)
           navCreateAccount.style.display = "none"
           userScores.style.display = "flex"
           if (screenWidth > 1100) {
@@ -123,7 +132,7 @@ function setUserScores(res) {
 }
 
 function createScoreList(level) {
-  console.log(level)  // undefined for user scores
+  //console.log(level)  // undefined for user scores
   let list = []
   level.forEach( x => {
     //console.log(typeof x)
@@ -137,6 +146,16 @@ function createScoreList(level) {
   return list.join("")
 }
 
+function handleUserNavLinks() {
+  console.log("nav drop clicked")
+  if (userNavLinks.style.display == "none") {
+    userNavLinks.style.display = "flex"
+    navChevron.classList.replace("fa-chevron-down", "fa-chevron-up")
+  } else {
+    userNavLinks.style.display = "none"
+    navChevron.classList.replace("fa-chevron-up", "fa-chevron-down")
+  }
+}
 
 noAccount.addEventListener("click", closeModal)
 //login.addEventListener("click", displayModal)
@@ -154,13 +173,13 @@ function closeModal() {
 loginForm.addEventListener("submit", logInUser)
 
 function logInUser(e) {
-  const username = e.target.elements[0].value
-  const password = e.target.elements[1].value
+  const username = e.target.elements[0].value,
+        password = e.target.elements[1].value,
   //console.log(`${username} ${password}`)
   //console.log(this.readyState + " " + this.status)
-  const xhttp = new XMLHttpRequest()
+        xhttp = new XMLHttpRequest()
+
   xhttp.onreadystatechange = function() {
-    
     if (this.readyState == 4 && this.status == 200) {
       alert(this.response)
     }
@@ -187,7 +206,7 @@ function logoutUser(e) {
       console.log("error logging out")
     } 
     if (this.readyState == 4 && this.status == 200) {
-      alert(this.response)
+      //alert(this.response)
       location.assign("/")
     }
   }

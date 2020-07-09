@@ -14,7 +14,7 @@
       <a class="navLink" href="/">Home<hr></a>
     </button>
   </nav>
-  <div id="createAccountContainer">
+  <div id="createAccountContainer" style="display: none;">
     <h1>Create An account</h1>
     <form id="createAccountForm" autocomplete="off">
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
@@ -32,7 +32,18 @@
       <h3>This privacy policy may be amended.  If at any time you do not agree with the terms herein you may delete your account.</h3>
     </div>
   </div>
-  <div id="deleteAccountContainer">
+  <div id="changePasswordContainer" style="display: none;">
+    <h1>Change Your Password</h1>
+    <form id="changePasswordForm" autocomplete="off">
+      <!-- <input type="text" name="username" placeholder="Username" maxlength="20" required> -->
+      <input type="password" name="oldPassword" placeholder="Old Password" required autocomplete="new-password"> 
+      <input type="password" name="newPassword" placeholder="New Password" required>
+      <input type="password" name="confirmNewPassword" placeholder="Confirm New Password" required> 
+      <div id="changePasswordErrorMessage"></div>
+      <input type="submit" value="Change Password" id="changePasswordSubmit">
+    </form>
+  </div>
+  <div id="deleteAccountContainer" style="display: none;">
     <h1>Delete Your Account</h1>
     <form id="deleteAccountForm" autocomplete="off">
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
