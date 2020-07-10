@@ -32,6 +32,18 @@
       <h3>This privacy policy may be amended.  If at any time you do not agree with the terms herein you may delete your account.</h3>
     </div>
   </div>
+  <div id="forgotPasswordContainer" style="display: none;">
+    <h1 class="accountHeader">Forgot Password</h1>
+    <form id="forgotPasswordForm">
+      <input type="text" name="username" placeholder="Username" required>
+      <label for="confirmPasswordChange">
+        <input type="checkbox" name="confirmPasswordChange" required>
+        I agree, and understand, that my password will be reset and a new password will be emailed to the email address associated with my account.
+      </label>
+      <div id="forgotPasswordErrorMessage"></div>
+      <input type="submit" id="forgotPasswordSubmit" value="Submit">
+    </form>
+  </div>
   <div id="editEmailContainer" style="display: none;">
     <h1 class="accountHeader">Change Or Add Email</h1>
     <p id="email">Email: <span id="currentEmail"></span></p>

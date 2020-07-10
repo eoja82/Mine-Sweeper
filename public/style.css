@@ -280,19 +280,7 @@ h4 {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-/* #howToPlay {
-  background-color: rgb(31, 201, 88);
-  border: 1px solid rgb(31, 201, 88);
-}
-#howToPlay:hover, #howToPlay:focus {
-  cursor: pointer;
-  background-color: rgb(0, 193, 252);
-  border: 1px solid rgb(0, 193, 252);
-} */
-/* .howTo {
-  text-align: center;
-  margin: 3% 0;
-} */
+
 #instructions {
   width: 90%;
   margin: 0 auto 3% auto;
@@ -379,6 +367,11 @@ input[type=submit]:hover, input[type=submit]:focus {
   background-color: rgb(0, 193, 252);
   border: 2px solid rgb(0, 193, 252);
 }
+#forgotPasswordLink {
+  color: rgb(190, 190, 190);
+  text-decoration: none;
+  margin: -1.3rem auto 1.3rem;
+}
 #createAccount {
   width: 250px;
   height: 30px;
@@ -417,10 +410,14 @@ input[type=submit]:hover, input[type=submit]:focus {
 }
 
 /* create/delete an account, edit email or change password*/
+#forgotPasswordContainer {
+  margin-bottom: 2rem;
+}
 #createAccountForm, 
 #changePasswordForm, 
 #editEmailForm,
-#deleteAccountForm {
+#deleteAccountForm,
+#forgotPasswordForm {
   display: flex;
   flex-direction: column;
   max-width: 80%;
@@ -431,7 +428,8 @@ input[type=submit]:hover, input[type=submit]:focus {
 #createErrorMessage, 
 #changePasswordErrorMessage,
 #editEmailErrorMessage, 
-#deleteErrorMessage {
+#deleteErrorMessage,
+#forgotPasswordErrorMessage {
   color: rgb(250, 52, 45);
   text-align: center;
 }
@@ -492,7 +490,7 @@ input[type=submit]:hover, input[type=submit]:focus {
   background-color: rgb(0, 193, 252);
   border-color: rgb(0, 193, 252);
 }
-label[for="cannotBeUndone"] {
+label[for="cannotBeUndone"], label[for="confirmPasswordChange"] {
   padding-top: .5rem;
 }
 

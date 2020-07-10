@@ -12,9 +12,12 @@ const createAccountForm = document.getElementById("createAccountForm"),
       changePasswordErrorMessage = document.getElementById("changePasswordErrorMessage"),
       editEmailContainer = document.getElementById("editEmailContainer"),
       editEmailform = document.getElementById("editEmailForm"),
-      editEmailSubmit = document.getElementById("editEmailSubmit"),
+      //editEmailSubmit = document.getElementById("editEmailSubmit"),
       editEmailErrorMessage = document.getElementById("editEmailErrorMessage"),
-      currentEmail = document.getElementById("currentEmail")
+      currentEmail = document.getElementById("currentEmail"),
+      forgotPasswordContainer = document.getElementById("forgotPasswordContainer"),
+      forgotPasswordForm = document.getElementById("forgotPasswordForm"),
+      forgotPasswordErrorMessage = document.getElementById("forgotPasswordErrorMessage")
 let loggedIn
 
 // if !loggedIn hide delete account, if loggedIn hide create account
@@ -35,12 +38,14 @@ function getLoginStatus() {
         loggedIn = res.loggedIn
         if (loggedIn) {
           createAccountContainer.style.display = "none"
+          forgotPasswordContainer.style.display = "none"
           editEmailContainer.style.display = "block"
           changePasswordContainer.style.display = "block"
           deleteAccountContainer.style.display = "block"
           currentEmail.innerHTML = res.email
         } else {
           createAccountContainer.style.display = "block"
+          forgotPasswordContainer.style.display = "block"
           editEmailContainer.style.display = "none"
           changePasswordContainer.style.display = "none"
           deleteAccountContainer.style.display = "none"
@@ -126,6 +131,7 @@ function editUserEmail(e) {
         alert(this.response)
         editEmailForm.reset()
         editEmailErrorMessage.innerHTML = ""
+        window.location.reload()
       }
     }
     xhttp.open("PUT", "/accounts/useraccount", true)
@@ -170,6 +176,30 @@ function changeUserPassword(e) {
     xhttp.send(`oldPassword=${oldPassword}&newPassword=${newPassword}`)
   } 
   /* e.preventDefault() */
+}
+
+// user forgot password
+forgotPasswordForm.addEventListener("submit", passwordHelp)
+
+function passwordHelp(e) {
+  const formData = e.target.elements,
+        username = formData[0].value,
+        xhttp = new XMLHttpRequest()
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status >= 400) {
+      forgotPasswordErrorMessage.innerHTML = this.response
+    }
+    if (this.readyState == 4 && this.status == 200) {
+      alert(this.response)
+      forgotPasswordForm.reset()
+    }
+  }
+  xhttp.open("PUT", "/accounts/forgotpassword", true)
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+  xhttp.send(`username=${username}`)
+
+  e.preventDefault()
 }
 
 // delete users' account and users' leaderboard scores if any

@@ -1,6 +1,9 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 const bcrypt = require("bcrypt")
+const nodemailer = require("nodemailer")
+const shortid = require("shortid")
+require('dotenv').config();
 //let leaderBoardExists = false
 
 // to use findOneAndUpdate
@@ -447,6 +450,85 @@ module.exports = function(app) {
           } else {
             console.log("Logging out user.")
             res.send("Log out successful!")
+          }
+        })
+      })
+
+    // user forgot password
+    app.route("/accounts/forgotpassword")
+      .put(function(req, res) {
+        const username = req.body.username
+
+        Users.findOne({username: username}, function(err, doc) {
+          if (err) {
+            console.log(err)
+            res.send("An error occured, your password was not reset.")
+          } else if (!doc) {
+            res.send("Invalid username.")
+          } else {
+            const newPassword = shortid.generate(),
+                  userEmail = doc.email
+            let passwordReset
+
+            if (userEmail == "") {
+              res.send(`The account for ${username} does not contain an email address.`)
+              return
+            }
+
+            bcrypt.hash(newPassword, 12, async function(err, newHash) {
+              if (err) {
+                console.log(err)
+                res.send("An error occured, your password was not reset.")
+              } else {
+                await resetPassword()
+                
+                function resetPassword() {
+                  return new Promise( (resolve, reject) => {
+                    Users.findOneAndUpdate({username: username}, {hash: newHash}, {new: true}, function(err, doc) {
+                      if (err) {
+                        console.log(err)
+                        res.send("An error occured, your password was not reset.")
+                        reject()
+                      } else if (!doc) {
+                          res.status(500).send("An error occured, your password was not reset.")
+                          resolve()
+                      } else {
+                        passwordReset = true
+                        resolve()
+                      }
+                    })
+                  })
+                }
+
+                if (passwordReset) {
+                  const transporter = nodemailer.createTransport({
+                    service: process.env.EMAIL_SERVICE,
+                    auth: {
+                      user: process.env.EMAIL,
+                      pass: process.env.EMAIL_PASS
+                    }
+                  })
+                  const mailOptions = {
+                    from: process.env.EMAIL,
+                    to: userEmail,
+                    subject: "New Minesweeper Password",
+                    text: `Your new password is: ${newPassword}.  After you log in you should change your password and not use this password anymore.\n\nHave fun playing Minesweeper!\n\nRegards,\nMinesweeper Staff`
+                  }
+                  transporter.sendMail(mailOptions, function(err, info) {
+                    if (err) {
+                      console.log(err)
+                      res.status(500).send('An error occured.  Please submit a new "Forgot Password" request.')
+                    } else {
+                      //console.log('Email sent: ' + info.response)
+                      res.send(`A new password was sent to the email associated with ${username}'s account.`)
+                    }
+                  })
+                } else {
+                  res.status(500).send("An error occured, your password was not reset.")
+                }
+
+              }
+            })
           }
         })
       })
