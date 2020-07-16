@@ -1,7 +1,8 @@
 const createAccountForm = document.getElementById("createAccountForm"),
       createErrorMessage = document.getElementById("createErrorMessage"),
-      privacyPolicy = document.getElementById("privacyPolicy"),
-      privacyLink = document.getElementById("privacyLink"),
+      //privacyPolicy = document.getElementById("privacyPolicy"),
+      legalLink = document.getElementById("legalLink"),
+      termsAndPrivacyPolicy = document.getElementById("termsAndPrivacyPolicy"),
       closePrivacyPolicy = document.getElementById("closePrivacyPolicy"),
       deleteAccountForm = document.getElementById("deleteAccountForm"),
       deleteErrorMessage = document.getElementById("deleteErrorMessage"),
@@ -56,17 +57,6 @@ function getLoginStatus() {
     xhttp.open("GET", "/init/accounts", true)
     xhttp.send()
   })
-}
-
-privacyLink.addEventListener("click", displayPolicy)
-closePrivacyPolicy.addEventListener("click", displayPolicy)
-
-function displayPolicy() {
-  if (privacyPolicy.style.display == "none") {
-    privacyPolicy.style.display = "block"
-  } else {
-    privacyPolicy.style.display = "none"
-  }
 }
 
 // create new user account

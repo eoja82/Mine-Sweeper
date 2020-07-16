@@ -55,7 +55,13 @@ app.route("/")
 
 app.route("/accounts")
   .get(function(req, res) {
+    console.log(`user logged in: ${req.session.loggedIn}`)
     res.sendFile(process.cwd() + "/views/accounts.html");
+  });
+
+app.route("/legal")
+  .get(function(req, res) {
+    res.sendFile(process.cwd() + "/views/legal.html");
   });
 
 //Routing for API 

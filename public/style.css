@@ -30,7 +30,7 @@ body {
   transition: .3s;
 }
 #navChevron {
-  color: rgb(190, 190, 190);
+  color: rgb(0, 193, 252);
   padding-left: .75rem;
   font-size: 1.1rem;
 }
@@ -105,13 +105,19 @@ body {
 .alignRight {
   float: right;
 }
+.moreScores, .lessScores {
+  cursor: pointer;
+}
 #leaderboard, #userScores {
   display: flex;
   flex-direction: column;
   max-width: 50%;
 }
 #leaderboard ul, #userScores ul {
-  padding: 0 5px 0 20px;
+  padding: 0 5px 0 25px;
+}
+#leaderboard {
+  padding-left: 2px;
 }
 
 #gameContainer {
@@ -295,6 +301,9 @@ h4 {
   cursor: pointer;
   font-size: 2rem;
 }
+footer {
+  margin: 3rem 0 2rem;
+}
 
 /* login modal style */
 #loginModal {
@@ -438,7 +447,7 @@ input[type=submit]:hover, input[type=submit]:focus {
   text-align: center;
   margin: 0;
 }
-#privacyLink {
+#legalLink {
   display: block;
   cursor: pointer;
   text-align: center;
@@ -449,10 +458,10 @@ input[type=submit]:hover, input[type=submit]:focus {
   font-weight: 300;
   text-decoration: none;
 }
-#privacyLink:hover, #privacylink:focus {
+#legalLink:hover, #legalLink:focus {
   color: rgb(0, 193, 252);
 }
-#privacyPolicy {
+#termsAndPrivacyPolicy {
   position: relative;
   width: 80%;
   background-color: rgb(190, 190, 190);
@@ -461,15 +470,14 @@ input[type=submit]:hover, input[type=submit]:focus {
   /* height: 0; */
   margin: 1rem auto;
   transition: .4s;
-  /* padding: 2rem; */
+  padding: 1rem;
   text-align: left;
   overflow-x: auto;
 }
-#privacyPolicy h3 {
-  padding: 1rem 1rem 0;
-  margin: 0;
+#termsAndPrivacyPolicy h5 {
+  color: black;
 }
-#privacyPolicy h3:last-child {
+#termsAndPrivacyPolicy h3:last-child {
   padding-bottom: 1rem;
 }
 #closePrivacyPolicy {
@@ -479,6 +487,21 @@ input[type=submit]:hover, input[type=submit]:focus {
   cursor: pointer;
   font-size: 2rem;
 }
+#termsOfUse ul,
+#privacyPolicy ul {
+  list-style-type: upper-alpha;
+}
+#termsOfUse ul li,
+#privacyPolicy ul li {
+  font-weight: bold;
+}
+#termsOfUse ul ul {
+  list-style-type: decimal;
+}
+#termsOfUse ul ul li {
+  font-weight: normal;
+}
+
 #deleteAccountForm {
   margin-bottom: 3rem;
 }
