@@ -33,11 +33,7 @@ function resetScreenWidth() {
   if (!loggedIn && screenWidth > 1100) {
     gameContainer.style.marginLeft = "150px"
     scoresContainer.style.width = "150px"
-  } else {
-    gameContainer.style.marginLeft = "auto"
-    scoresContainer.style.width = "95%"
-  }
-  if (loggedIn && screenWidth > 1100) {
+  } else if (loggedIn && screenWidth > 1100) {
     gameContainer.style.marginLeft = "300px"
     scoresContainer.style.width = "300px"
     userScores.firstElementChild.style.marginBottom = "4px"
@@ -72,9 +68,9 @@ function getScoresLoginStatus() {
           welcome.style.display = "none"
           welcome.removeEventListener("click", handleUserNavLinks)
           navLogin.addEventListener("click", displayModal)
-          navLogin.style.display = "block"
+          //navLogin.parentElement.style.display = "unset"
           navLogout.removeEventListener("click", logoutUser)
-          navCreateAccount.style.display = "block"
+          //navCreateAccount.parentElement.style.display = "unset"
           userScores.style.display = "none"
           if (screenWidth > 1100) {
             gameContainer.style.marginLeft = "150px"
@@ -87,9 +83,9 @@ function getScoresLoginStatus() {
           welcome.childNodes[0].innerText = `Welcome, ${user}!`
           welcome.addEventListener("click", handleUserNavLinks)
           navLogin.removeEventListener("click", displayModal)
-          navLogin.style.display = "none"
+          navLogin.parentElement.style.display = "none"
           navLogout.addEventListener("click", logoutUser)
-          navCreateAccount.style.display = "none"
+          navCreateAccount.parentElement.style.display = "none"
           userScores.style.display = "flex"
           if (screenWidth > 1100) {
             gameContainer.style.marginLeft = "300px"
