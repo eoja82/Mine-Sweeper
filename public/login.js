@@ -17,11 +17,14 @@ const loginModal = document.getElementById("loginModal"),
       navButtons = document.querySelectorAll(".navButton"),
       gameContainer = document.getElementById("gameContainer"),
       scoresContainer = document.getElementById("scoresContainer"),
-      leaderboard = document.getElementById("leaderboard"),
-      changePasswordContainer = document.getElementById("changePasswordContainer")
+      leaderboard = document.getElementById("leaderboard")
 let loggedIn,
     user,
-    screenWidth
+    screenWidth,
+    moreScores,
+    lessScores,
+    displayMoreScores,
+    expandedScores
 
 addEventListener("resize", resetScreenWidth)
 
@@ -30,7 +33,6 @@ function resetScreenWidth() {
   if (!loggedIn && screenWidth > 1100) {
     gameContainer.style.marginLeft = "150px"
     scoresContainer.style.width = "150px"
-    /* leaderboard.style.maxWidth = "100%" */
   } else {
     gameContainer.style.marginLeft = "auto"
     scoresContainer.style.width = "95%"
@@ -38,11 +40,11 @@ function resetScreenWidth() {
   if (loggedIn && screenWidth > 1100) {
     gameContainer.style.marginLeft = "300px"
     scoresContainer.style.width = "300px"
+    userScores.firstElementChild.style.marginBottom = "4px"
   } else {
     gameContainer.style.marginLeft = "auto"
     scoresContainer.style.width = "95%"
   }
-  //console.log(`width: ${screenWidth} ${typeof screenWidth}`)
 }
 
 (async function init() {
@@ -69,10 +71,8 @@ function getScoresLoginStatus() {
           displayModal()
           welcome.style.display = "none"
           welcome.removeEventListener("click", handleUserNavLinks)
-          //navLogin.childNodes[0].nodeValue = "Log In"
           navLogin.addEventListener("click", displayModal)
           navLogin.style.display = "block"
-          //navLogin.removeEventListener("click", logoutUser)
           navLogout.removeEventListener("click", logoutUser)
           navCreateAccount.style.display = "block"
           userScores.style.display = "none"
@@ -83,21 +83,18 @@ function getScoresLoginStatus() {
           }
         }
         if (loggedIn) {
-          //console.log("logged In")
           welcome.style.display = "block"
           welcome.childNodes[0].innerText = `Welcome, ${user}!`
           welcome.addEventListener("click", handleUserNavLinks)
-          console.log(welcome.childNodes[0])
-          //navLogin.childNodes[0].nodeValue = "Log Out"
           navLogin.removeEventListener("click", displayModal)
           navLogin.style.display = "none"
-          //navLogin.addEventListener("click", logoutUser)
           navLogout.addEventListener("click", logoutUser)
           navCreateAccount.style.display = "none"
           userScores.style.display = "flex"
           if (screenWidth > 1100) {
             gameContainer.style.marginLeft = "300px"
             scoresContainer.style.width = "300px"
+            userScores.firstElementChild.style.marginBottom = "4px"
           }
         }
         resolve()
@@ -116,6 +113,8 @@ function setLeaderboardScores(res, loggedIn) {
   let leaderExpertList = createScoreList(res.leaderExpert)
   leaderExpert.innerHTML = leaderExpertList
   if (loggedIn) setUserScores(res)
+  else addScoreboardEventListeners() 
+  if (expandedScores) showMoreOrLessScores()
 }
 
 function setUserScores(res) {
@@ -129,25 +128,42 @@ function setUserScores(res) {
   //console.log("expert level " + res.userExpert)
   let userExpertList = createScoreList(res.userExpert)
   userExpert.innerHTML = userExpertList
+  addScoreboardEventListeners()
+  //console.log("line 152 " + lessScores[0].style.display)
 }
 
 function createScoreList(level) {
-  //console.log(level)  // undefined for user scores
   let list = []
-  level.forEach( x => {
-    //console.log(typeof x)
-    if (typeof x == "number") {
-      list.push(`<li class="scoreListItem">${user} <span class="alignRight">${x}</span></li>`)
-    } else {
-      list.push(`<li class="scoreListItem">${x.username} <span class="alignRight">${x.score}</span></li>`)
+  for (let i = 0; i < 10; i++) {
+    if (i == 5) {
+      list.push(`<span class="moreScores" style="display: block;">Show More</span><div class="displayMoreScores" style="display: none;">`)
     }
-    
-  })
+    if (level[i] == undefined) {
+      list.push(`<li class="scoreListItem"><span class="alignRight"></span></li>`)
+    } else if (typeof level[i] == "number") {
+      list.push(`<li class="scoreListItem">${user} <span class="alignRight">${level[i]}</span></li>`)
+    } else {
+      list.push(`<li class="scoreListItem">${level[i].username} <span class="alignRight">${level[i].score}</span></li>`)
+    }
+    if (i == 9) {
+      list.push(`</div><span class="lessScores" style="display: none;">Show Less</span>`)
+    }
+  }
   return list.join("")
 }
 
+function addScoreboardEventListeners() {
+  //console.log("addScoreboardEventListeners")
+  moreScores = document.querySelectorAll(".moreScores")
+  lessScores = document.querySelectorAll(".lessScores")
+  displayMoreScores = document.querySelectorAll(".displayMoreScores")
+  moreScores.forEach( x => {
+    x.addEventListener("click", showMoreOrLessScores)
+  })
+}
+
 function handleUserNavLinks() {
-  console.log("nav drop clicked")
+  //console.log(e.target)
   if (userNavLinks.style.display == "none") {
     userNavLinks.style.display = "flex"
     navChevron.classList.replace("fa-chevron-down", "fa-chevron-up")
@@ -157,16 +173,44 @@ function handleUserNavLinks() {
   }
 }
 
+function showMoreOrLessScores() {
+  //console.log("showMoreOrLessScores")
+  if (displayMoreScores[0].style.display == "none") {
+    displayMoreScores.forEach( x => {
+      x.style.display = "block"
+    })
+    moreScores.forEach( x => {
+      x.style.display = "none"
+      x.removeEventListener("click", showMoreOrLessScores)
+    })
+    lessScores.forEach( x => {
+      x.style.display = "block"
+      x.addEventListener("click", showMoreOrLessScores)
+    })
+    expandedScores = true
+  } else {
+    displayMoreScores.forEach( x => {
+      x.style.display = "none"
+    })
+    moreScores.forEach( x => {
+      x.style.display = "block"
+      x.addEventListener("click", showMoreOrLessScores)
+    })
+    lessScores.forEach( x => {
+      x.style.display = "none"
+      x.removeEventListener("click", showMoreOrLessScores)
+    })
+    expandedScores = false
+  }
+}
+
 noAccount.addEventListener("click", closeModal)
-//login.addEventListener("click", displayModal)
 
 function displayModal() {
-  //console.log("displaying modal")
   loginModal.style.display = "block"
 }
 function closeModal() {
   loginModal.style.display = "none"
-  //console.log("close modal")
 }
 
 // login user
@@ -175,8 +219,6 @@ loginForm.addEventListener("submit", logInUser)
 function logInUser(e) {
   const username = e.target.elements[0].value,
         password = e.target.elements[1].value,
-  //console.log(`${username} ${password}`)
-  //console.log(this.readyState + " " + this.status)
         xhttp = new XMLHttpRequest()
 
   xhttp.onreadystatechange = function() {
@@ -200,13 +242,11 @@ function logInUser(e) {
 function logoutUser(e) {
   const xhttp = new XMLHttpRequest()
   xhttp.onreadystatechange = function() {
-    //console.log(`ready: ${this.readyState}, status: ${this.status}`)
     if (this.readyState == 4 && this.status >= 400) {
       alert(this.response)
       console.log("error logging out")
     } 
     if (this.readyState == 4 && this.status == 200) {
-      //alert(this.response)
       location.assign("/")
     }
   }

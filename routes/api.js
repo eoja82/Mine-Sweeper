@@ -568,7 +568,7 @@ module.exports = function(app) {
                 return resolve()
               } else {
                 levelScoresLeaderboard = doc[level]
-                if (levelScoresLeaderboard.length < 5) {
+                if (levelScoresLeaderboard.length < 10) {
                   levelScoresLeaderboard.push({username: username, score: score})
                   levelScoresLeaderboard.sort( (a, b) => {
                     return a.score - b.score
@@ -611,7 +611,7 @@ module.exports = function(app) {
                 reject()
               } else {
                 levelScoresUser = doc[level]
-                if (levelScoresUser.length < 5) {
+                if (levelScoresUser.length < 10) {
                   levelScoresUser.push(score)
                   levelScoresUser.sort( (a, b) => {
                     return a - b
