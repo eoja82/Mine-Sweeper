@@ -15,9 +15,9 @@ let width, height,
    expert: 16x30 99 mines */
 
 switch (gameLevel) {
-  case "beginner": width = 9, height = 9, mines = 5;
+  case "beginner": width = 9, height = 9, mines = 10;
     break;
-  case "intermediate": width = 16, height = 16, mines = 10;
+  case "intermediate": width = 16, height = 16, mines = 40;
     break;
   case "expert": width = 30, height = 16, mines = 99;
    break;
@@ -307,7 +307,7 @@ function getScores(score) {
     } 
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.response)
-      console.log(res)
+      //console.log(res)
       alert(res.message)
       setLeaderboardScores(res, res.loggedIn)
     }
@@ -327,9 +327,9 @@ function reset() {
 function setGameLevel(e) {
   clearInterval(start);
   switch (e.target.selectedOptions[0].value) {
-    case "beginner": width = 9, height = 9, mines = 5, gameLevel = "beginner", customGameLevels.style.display = "none";
+    case "beginner": width = 9, height = 9, mines = 10, gameLevel = "beginner", customGameLevels.style.display = "none";
       break;
-    case "intermediate": width = 16, height = 16, mines = 10, gameLevel = "intermediate", customGameLevels.style.display = "none";
+    case "intermediate": width = 16, height = 16, mines = 40, gameLevel = "intermediate", customGameLevels.style.display = "none";
       break;
     case "expert": width = 30, height = 16, mines = 99, gameLevel = "expert", customGameLevels.style.display = "none";
       break;
