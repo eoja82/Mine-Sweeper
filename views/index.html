@@ -50,7 +50,7 @@
       <div id="grid" oncontextmenu="return false;"></div>
     </div>
     <div id="presetGameLevels">
-      <label for="presetGameLevels">Game Level: </label>
+      <label for="gameLevels">Game Level: </label>
       <select name="presetGameLevels" id="gameLevels">
         <option value="beginner">Beginner</option>
         <option value="intermediate" selected>Intermediate</option>
@@ -62,7 +62,7 @@
     <h4>Create your own game board!</h4>
     <div id="gameOptions">
       <div class="gameWidth">
-        <label for="width">Width:</label>
+        <label for="selectGameWidth">Width:</label>
         <select name="width" id="selectGameWidth">
           <option value="10">10</option>
           <option value="12">12</option>
@@ -73,7 +73,7 @@
         </select>
       </div>
       <div class="gameHeight">
-        <label for="height"> Height:</label>
+        <label for="selectGameHeight"> Height:</label>
         <select name="height" id="selectGameHeight">
           <option value="10">10</option>
           <option value="12">12</option>
@@ -84,10 +84,9 @@
         </select>
       </div>
       <div class="gameMines">
-        <label for="mines"> Mines:</label>
+        <label for="selectGameMines"> Mines:</label>
         <select name="mines" id="selectGameMines">
-          <!-- change first option back to 10 after testing -->
-          <option value="5">5</option>
+          <option value="10">10</option>
           <option value="12">12</option>
           <option value="15" selected>15</option>
           <option value="20">20</option>
@@ -100,11 +99,13 @@
           <option value="99">99</option>
         </select>
       </div>
-      <div class="reset">
+      <!-- <div class="reset">
         <button id="userGame">Customize</button>
-      </div>
+      </div> -->
     </div>
-   
+    <div class="reset">
+      <button id="userGame">Customize</button>
+    </div>
     <p id="scoresNote">*Scores for custom game levels are not saved to your account.</p>
     </div>
     <div id="scoresContainer">
@@ -176,11 +177,10 @@
         Select the number of squares you want for the width and height, and the number of mines to hide.  Then click the Reset button.  Your choices determines the difficulty of clearing the board.
       </p>
     </div>
-    <footer>
+    <div class="legalLinkContainer" id="indexLegalLinkContainer">
       <a href="/legal" class="legalLink">Privacy Policy & Terms of Use</a>
-    </footer>
+    </div>
   </div>
-  
 
   <!-- login modal -->
   <div id="loginModal">

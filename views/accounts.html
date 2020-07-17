@@ -26,13 +26,15 @@
       <input type="submit" value="Create Account">
     </form>
   </div>
-  <a href="/legal" class="legalLink">Privacy Policy & Terms of Use</a>
+  <div class="legalLinkContainer" id="accountsLegalLinkContainer">
+    <a href="/legal" class="legalLink">Privacy Policy & Terms of Use</a>
+  </div>
   <div id="forgotPasswordContainer" style="display: none;">
     <h1 class="accountHeader">Forgot Password</h1>
     <form id="forgotPasswordForm">
       <input type="text" name="username" placeholder="Username" required>
       <label for="confirmPasswordChange">
-        <input type="checkbox" name="confirmPasswordChange" required>
+        <input type="checkbox" name="confirmPasswordChange" id="confirmPasswordChange" required>
         I agree, and understand, that my password will be reset and a new password will be emailed to the email address associated with my account.
       </label>
       <div id="forgotPasswordErrorMessage"></div>
@@ -66,14 +68,13 @@
       <input type="text" name="username" placeholder="Username" maxlength="20" required>
       <input type="password" name="password" placeholder="Password" required autocomplete="new-password"> 
       <label for="cannotBeUndone">
-        <input type="checkbox" name="cannotBeUndone" required>
+        <input type="checkbox" name="cannotBeUndone" id="cannotBeUndone" required>
         I understand that deleteing my account will erase all of my scores and cannot be undone.
       </label>
       <div id="deleteErrorMessage"></div>
       <input type="submit" value="Delete Account" id="deleteAccountSubmit">
     </form>
   </div>
-
   <script src="../public/accounts.js"></script>
 </body>
 </html>
