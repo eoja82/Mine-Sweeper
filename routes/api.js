@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt")
 const nodemailer = require("nodemailer")
 const shortid = require("shortid")
 require('dotenv').config();
-//let leaderBoardExists = false
 
 // to use findOneAndUpdate
 mongoose.set("useFindAndModify", false)
@@ -30,20 +29,20 @@ module.exports = function(app) {
   let Users = mongoose.model("Users", userSchema)
   let Leaderboard = mongoose.model("Leaderboard", leaderboardSchema)
 
- /*  if (!leaderBoardExists) {
-    let leaderboard = new Leaderboard({
-      name: "leaderboard"
+  app.route("/")
+    .get(function(req, res) {
+      res.sendFile(process.cwd() + "/views/index.html")
     })
-    leaderboard.save(function(err, doc) {
-      if (err) console.log(err)
-      else if (!doc) console.log("leaderboard not created")
-      else {
-        leaderBoardExists = true;
-        console.log("leaderboard created")
-        console.log(doc)
-      }
+
+  app.route("/accounts")
+    .get(function(req, res) {
+      res.sendFile(process.cwd() + "/views/accounts.html")
+    });
+
+  app.route("/legal")
+    .get(function(req, res) {
+      res.sendFile(process.cwd() + "/views/legal.html")
     })
-  } */
 
   app.route("/init")
     .get(function(req, res) {
@@ -66,7 +65,6 @@ module.exports = function(app) {
           leaderExpert = doc.expert
 
           if (loginStatus) {
-            //console.log(username)
             Users.findOne({username: username}, function(err, doc) {
               if (err) {
                 console.log(err)
@@ -75,7 +73,6 @@ module.exports = function(app) {
                 console.log(`can't find user ${username}`)
               }
               else {
-                //console.log(doc)
                 userBeginner = doc.beginner
                 userIntermediate = doc.intermediate
                 userExpert = doc.expert
@@ -108,7 +105,6 @@ module.exports = function(app) {
   // if !loggedIn hide delete account, if loggedIn hide create account
   app.route("/init/accounts")
     .get(function(req, res) {
-      //res.send({loggedIn: req.session.loggedIn})
       Users.findOne({username: req.session.username}, function(err, doc) {
         if (err) {
           console.log(err) 
@@ -125,10 +121,8 @@ module.exports = function(app) {
     })
 
   // create new user account
-  //app.route("/accounts/newuser")
   app.route("/accounts/useraccount")
     .post(function(req, res) {
-      //console.log(req.body)
       const username = req.body.username,
             email = req.body.email,
             password = req.body.password,
@@ -170,7 +164,6 @@ module.exports = function(app) {
                       console.log(err)
                       res.send("Error: something went wrong creating new account.")
                     } else {
-                      //console.log(doc)
                       res.status(307).send("Your account was successfully created!  Please log in.")
                     }
                   })
@@ -193,15 +186,13 @@ module.exports = function(app) {
             oldPassword = req.body.oldPassword,
             newPassword = req.body.newPassword
       let emailInUse
-      //console.log(newEmail + " " + password)
+      
       // if req includes newEmail update email, else change passowrd
       if (newEmail) {
-        //console.log("in email")
         // check if there is an account already with the new email
         await checkIfEmailInUse()
 
         function checkIfEmailInUse() {
-          //console.log("checking if email in use")
           return new Promise( (resolve, reject) => {
             Users.findOne({email: newEmail}, function(err, doc) {
               if (err) {
@@ -209,11 +200,9 @@ module.exports = function(app) {
                 res.send("Error: could not edit email.")
                 reject()
               } else if (!doc) {
-                //console.log("email not in use")
                 emailInUse = false
                 resolve()
               } else {
-                //console.log("email in use")
                 emailInUse = true
                 resolve()
               }
@@ -222,10 +211,8 @@ module.exports = function(app) {
         }
 
         if (emailInUse) {
-          //console.log("should be sending message email in use")
           res.status(500).send(`An account already exists with the email ${newEmail}`)
         } else {
-          //console.log("finding user")
           Users.findOne({username: username}, function(err, doc) {
             if (err) {
               console.log(err)
@@ -233,13 +220,11 @@ module.exports = function(app) {
             } else if (!doc) {
               res.status(500).send(`There was an error finding an account for ${username}.`)
             } else {
-              //console.log("checking hash")
               bcrypt.compare(password, doc.hash, function(err, result) {
                 if (err) {
                   console.log(err)
                   res.status(500).send("An error occured while trying to confirm your password.")
                 } else if (result) {
-                  //console.log("password is good")
                   Users.findOneAndUpdate({username: username}, {email: newEmail}, {new: true}, function(err, doc) {
                     if (err) {
                       console.log(err)
@@ -251,7 +236,6 @@ module.exports = function(app) {
                     }
                   })
                 } else {
-                  //console.log("password wrong")
                   res.status(500).send("Your password is incorrect.")
                 }
               })
@@ -284,7 +268,6 @@ module.exports = function(app) {
                   }
                 })
               } else {
-                //console.log("should be sending old password wrong")
                 res.status(500).send("Old password is incorrect.")
               }
             })
@@ -304,7 +287,6 @@ module.exports = function(app) {
           userDeletedDoc,
           leaderboadScoresDeleted
 
-
       await verifyAccount()
 
       if (user) {
@@ -318,8 +300,7 @@ module.exports = function(app) {
             } else {
               // reset account if there was an error deleteing scores from the leaderboard
               const options = {new: true, upsert: true}
-              //req.session.loggedIn = true
-              //req.session.username = username
+    
               Users.findOneAndUpdate({username: userDeletedDoc.username}, userDeletedDoc, options, function(err, doc) {
                 if (err) {
                   console.log(err)
@@ -348,19 +329,15 @@ module.exports = function(app) {
               res.send("Error: could not delete account.")
               reject()
             } else if (!doc) {
-              console.log("no user")
               user = false
               resolve()
             } else {
-              console.log("found user")
               user = true
               bcrypt.compare(password, doc.hash, async function(err, result) {
                 if (result) {
-                  console.log("password match")
                   passwordMatch = true          
                   resolve()
                 } else {
-                  console.log("password does not match")
                   passwordMatch = false
                   resolve()
                 }
@@ -380,7 +357,6 @@ module.exports = function(app) {
             } else {
               console.log("account deleted")
               userDeleted = true
-              //req.session.destroy()
               resolve()
             }
           })
@@ -402,7 +378,6 @@ module.exports = function(app) {
               leaderboadScoresDeleted = false
               reject()
             } else {
-              console.log("deleted leaderboard scores")
               leaderboadScoresDeleted = true
               resolve()
             }
@@ -416,7 +391,6 @@ module.exports = function(app) {
     .post(function(req, res) {
       const username = req.body.username,
             password = req.body.password
-      //console.log(`${username} ${password}`)
 
       Users.findOne({username: username}, function(err, user) {
         if (err) {
@@ -425,10 +399,8 @@ module.exports = function(app) {
         } else if (!user) {
           res.send(`${username} is not a valid username.`)
         } else {
-          //console.log("checking hash")
           bcrypt.compare(password, user.hash, function(err, result) {
             if (result) {
-              console.log("password match on log in")
               req.session.loggedIn = true
               req.session.username = username
               res.status(307).send({loggedIn: true, location: "/"})
@@ -448,7 +420,6 @@ module.exports = function(app) {
             console.log(err)
             res.send("Error: could not log out.")
           } else {
-            console.log("Logging out user.")
             res.send("Log out successful!")
           }
         })
@@ -536,7 +507,6 @@ module.exports = function(app) {
     // update users' scores
     app.route("/scores")
       .put(async function(req, res) {
-        //console.log(req.body)
         const username = req.body.username,
               level = req.body.level,
               score = Number(req.body.score),
@@ -591,8 +561,7 @@ module.exports = function(app) {
                     await updateLeaderBoard()
                     newLeaderboardHighScore = true
                     resolve()
-                }
-                
+                }  
               }
               resolve()
             })
@@ -640,18 +609,14 @@ module.exports = function(app) {
           })  
         }
 
-        //console.log(`user high: ${newLeaderboardHighScore}, leaderHigh: ${newLeaderboardHighScore}`)
         if (newUserHighScore && newLeaderboardHighScore) {
-          //console.log("new leader and user high score")
           message = `Congratulations, you're on the Leaderboard and have a new personal top 10 score for the ${level} level!`
         } else if (newUserHighScore && !newLeaderboardHighScore) {
-          //console.log("new user high score")
           message = `Congratulations, you have a new personal top 10 score for the ${level} level.`
         } else {
-          //console.log("return in setting message")
           return
         }
-        //console.log(`userBeginner: ${userBeginner}, leaderBigginer: ${leaderBeginner[0].score}`)
+        
         res.send({
           message: message,
           leaderBeginner: leaderBeginner,
@@ -665,14 +630,12 @@ module.exports = function(app) {
 
         function updateLeaderBoard() {
           return new Promise( (resolve, reject) => {
-            //console.log("updating leaderboard scores")
             Leaderboard.findOneAndUpdate({name: "leaderboard"}, {[level]: levelScoresLeaderboard}, {new: true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry, your score could not be saved to the leaderboard.")
                 reject()
               } else {
-                //console.log("updated leaderboard scores")
                 leaderBeginner = doc.beginner
                 leaderIntermediate = doc.intermediate
                 leaderExpert = doc.expert
@@ -684,14 +647,12 @@ module.exports = function(app) {
 
         function updateUsersScores() {
           return new Promise( (resolve, reject) => {
-            //console.log("updating user scores")
             Users.findOneAndUpdate({username: username}, {[level]: levelScoresUser}, {new:true}, function(err, doc) {
               if (err) {
                 console.log(err)
                 res.send("Error: Sorry your score could not be saved.")
                 reject()
               } else {
-                //console.log("updated user score")
                 userBeginner = doc.beginner
                 userIntermediate = doc.intermediate
                 userExpert = doc.expert
@@ -700,8 +661,5 @@ module.exports = function(app) {
             })
           })
         }
-
-      })
-
-      
+      })   
   }

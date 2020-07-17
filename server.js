@@ -1,32 +1,32 @@
 require('dotenv').config();
 const express = require("express");
 const helmet = require("helmet");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require('connect-mongo')(session);
+const bodyParser = require("body-parser")
+const mongoose = require("mongoose")
+const session = require("express-session")
+const MongoStore = require('connect-mongo')(session)
 const apiRoutes = require("./routes/api.js")
 
-const app = express();
-const port = process.env.PORT || 3000;
+const app = express()
+const port = process.env.PORT || 3000
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //app.use(helmet());
 
-app.use("/public", express.static(process.cwd() + "/public"));
+app.use("/public", express.static(process.cwd() + "/public"))
 
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).
-  catch (err => console.log(err));
+  catch (err => console.log(err))
 
 mongoose.connection.on("connected", () => {
-  console.log("Connected to database!");
+  console.log("Connected to database!")
 })
 
 // handle errors after initial connection
 mongoose.connection.on('error', (err) => {
-  console.log(err);
-});
+  console.log(err)
+})
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -40,29 +40,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24, // Equals 1 day (1 day * 24 hr/1 day * 60 min/1 hr * 60 sec/1 min * 1000 ms / 1 sec)
     secure: false
 }
-}));
-
-app.route("/")
-  .get(function(req, res) {
-    //console.log(`user logged in: ${req.session.loggedIn}`)
-    res.sendFile(process.cwd() + "/views/index.html");
-  });
-
-/* app.route("/loggedin")
-  .get(function(req, res) {
-    res.send({loggedIn: req.session.loggedIn})
-  }) */
-
-app.route("/accounts")
-  .get(function(req, res) {
-    console.log(`user logged in: ${req.session.loggedIn}`)
-    res.sendFile(process.cwd() + "/views/accounts.html");
-  });
-
-app.route("/legal")
-  .get(function(req, res) {
-    res.sendFile(process.cwd() + "/views/legal.html");
-  });
+}))
 
 //Routing for API 
 apiRoutes(app) 
@@ -71,9 +49,9 @@ apiRoutes(app)
 app.use(function(req, res, next) {
   res.status(404)
     .type("text")
-    .send("Not Found");
-});
+    .send("Not Found")
+})
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
-}); 
+  console.log(`Listening at http://localhost:${port}`)
+})
