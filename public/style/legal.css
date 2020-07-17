@@ -1,0 +1,50 @@
+#backToTop {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border: none;
+  background-color: transparent;
+  color: rgb(31, 201, 88);;
+  font-size: 35px;
+  cursor: pointer;
+}
+.nav {
+  display: flex;
+  flex-direction: row;
+}
+.navButton {
+  display: block;
+  width: auto;
+}
+#termsAndPrivacyPolicy {
+  position: relative;
+  width: 80%;
+  background-color: rgb(190, 190, 190);
+  color: black;
+  margin: 1rem auto;
+  transition: .4s;
+  padding: 1rem;
+  text-align: left;
+  overflow-x: auto;
+}
+#termsAndPrivacyPolicy h5 {
+  color: black;
+}
+#termsAndPrivacyPolicy h3:last-child {
+  padding-bottom: 1rem;
+}
+#termsOfUse ul,
+#privacyPolicy ul {
+  list-style-type: upper-alpha;
+}
+#termsOfUse ul li,
+#privacyPolicy ul li {
+  font-weight: bold;
+}
+#termsOfUse ul ul {
+  list-style-type: decimal;
+}
+#termsOfUse ul ul li {
+  font-weight: normal;
+}
