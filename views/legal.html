@@ -7,34 +7,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
-  <link rel="stylesheet" href="../public/style.css">
-  <style>
-    #backToTop {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      border: none;
-      background-color: transparent;
-      color: rgb(31, 201, 88);;
-      font-size: 35px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="../public/style/navAndBody.css">
+  <link rel="stylesheet" href="../public/style/legal.css">
 </head>
 <body>
-  <nav class="nav" style="display: flex; flex-direction: row;">
-    <button class="navButton" style="display: block; width: auto;">
+  <nav class="nav">
+    <button class="navButton">
       <a href="/" class="navLink">Home<hr></a>
     </button>
-    <button class="navButton" style="display: block; width: auto;">
+    <button class="navButton">
       <a href="javascript:void(0)" class="navLink" id="backButton">Back<hr></a>
     </button>
-    <!-- <a href="javascript:void(0);" id="navHamburger" class="navLink">&#9776;</a> -->
   </nav>
   <h1>Minesweeper</h1>
   <div id="termsAndPrivacyPolicy">
-    <!-- <div id="closePrivacyPolicy">&times</div> -->
     <div id="privacyPolicy">
       <h2>Privacy Policy</h2>
       <ul>
@@ -207,31 +193,6 @@
   </div>
   <button id="backToTop"><i class="fas fa-angle-double-up"></i></button>
 
-  <script>
-    const backToTop = document.getElementById("backToTop")
-    const backButton = document.getElementById("backButton")
-    
-    addEventListener("scroll", showOnScroll)
-    backToTop.addEventListener("click", toTop)
-    backButton.addEventListener("click", previousPage)
-
-    function showOnScroll() {
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTop.style.display = "block";
-      } else {
-        backToTop.style.display = "none";
-      }
-    }
-
-    function toTop() {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    }
-
-    function previousPage(e) {
-      e.preventDefault()
-      window.history.back()
-    }
-  </script>
+  <script src="../public/legal.js"></script>
 </body>
 </html>
