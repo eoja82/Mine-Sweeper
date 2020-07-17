@@ -160,6 +160,18 @@ label[for="cannotBeUndone"], label[for="confirmPasswordChange"] {
   max-width: 50%;
 }
 
+#indexLegalLinkContainer {
+  margin: 3rem auto;
+}
+#accountsLegalLinkContainer {
+  margin: 0 auto 2rem;
+}
+.legalLinkContainer {
+  display: flex;
+  width: auto;
+  justify-content: center;
+}
+
 .legalLink {
   display: block;
   cursor: pointer;
