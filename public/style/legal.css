@@ -9,14 +9,21 @@
   font-size: 35px;
   cursor: pointer;
 }
-.nav {
-  display: flex;
-  flex-direction: row;
+
+/* override nav settings from navAndBody.css so buttons are not hidden */
+@media only screen and (max-width: 440px) {
+  .nav button:not(:first-of-type) {
+    display: block;
+  }
 }
-.navButton {
-  display: block;
-  width: auto;
+/* override nav settings from navAndBody.css so buttons are in a row */
+@media only screen and (max-width: 440px) {
+  .nav {
+    display: flex;
+    flex-direction: row;
+  }
 }
+
 #termsAndPrivacyPolicy {
   position: relative;
   width: 80%;
