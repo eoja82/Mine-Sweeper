@@ -286,35 +286,27 @@ function winGame() {
   smileyFace.textContent = "😎";
   playing = false;
   startStopTimer(false);
-  //console.log(gameLevel);
-  //console.log("logged in: " + loggedIn + " user: " + user);
-  let score = timer.innerText
-  //console.log(`score: ${score} ${typeof score}`)
+  let score = timer.innerText;
   if (loggedIn && gameLevel !== "custom") {
-    //console.log("getScores")
-    getScores(score)
+    getScores(score);
   }
 }
 
 function getScores(score) {
-  //console.log("in GetScores")
-  const xhttp = new XMLHttpRequest()
+  const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-    //console.log(`ready: ${this.readyState}, status: ${this.status}`)
     if (this.readyState == 4 && this.status >= 400) {
       alert(this.response);
-      console.log("error saving score");
     } 
     if (this.readyState == 4 && this.status == 200) {
-      const res = JSON.parse(this.response)
-      //console.log(res)
-      alert(res.message)
-      setLeaderboardScores(res, res.loggedIn)
+      const res = JSON.parse(this.response);
+      alert(res.message);
+      setLeaderboardScores(res, res.loggedIn);
     }
   }
-  xhttp.open("PUT", "/scores", true)
+  xhttp.open("PUT", "/scores", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(`username=${user}&level=${gameLevel}&score=${score}`)
+  xhttp.send(`username=${user}&level=${gameLevel}&score=${score}`);
 }
 
 function reset() {
@@ -366,7 +358,6 @@ function createUserGame() {
   scoreboardClass.forEach( x => {
     x.style = "width: " + (width * size) / 3 + "px; height: " + size * 1.5 + "px;";
   });
-  //gameLevel = null
   newGame();
 }
 

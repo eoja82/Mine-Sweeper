@@ -68,9 +68,7 @@ function getScoresLoginStatus() {
           welcome.style.display = "none"
           welcome.removeEventListener("click", handleUserNavLinks)
           navLogin.addEventListener("click", displayModal)
-          //navLogin.parentElement.style.display = "unset"
           navLogout.removeEventListener("click", logoutUser)
-          //navCreateAccount.parentElement.style.display = "unset"
           userScores.style.display = "none"
           if (screenWidth > 1100) {
             gameContainer.style.marginLeft = "150px"
@@ -115,17 +113,13 @@ function setLeaderboardScores(res, loggedIn) {
 
 function setUserScores(res) {
   userScores.style.display = "flex"
-  //console.log("Begin level " + res.userBeginner)
   let userBeginnerList = createScoreList(res.userBeginner)
   userBeginner.innerHTML = userBeginnerList
-  //console.log("Inter level " + res.userIntermediate)
   let userIntermediateList = createScoreList(res.userIntermediate)
   userIntermediate.innerHTML = userIntermediateList
-  //console.log("expert level " + res.userExpert)
   let userExpertList = createScoreList(res.userExpert)
   userExpert.innerHTML = userExpertList
   addScoreboardEventListeners()
-  //console.log("line 152 " + lessScores[0].style.display)
 }
 
 function createScoreList(level) {
@@ -149,8 +143,8 @@ function createScoreList(level) {
 }
 
 function addScoreboardEventListeners() {
-  //console.log("addScoreboardEventListeners")
   moreScores = document.querySelectorAll(".moreScores")
+  // lessScores and displayMoreScores can now be difined at this point, they will be used subsequently
   lessScores = document.querySelectorAll(".lessScores")
   displayMoreScores = document.querySelectorAll(".displayMoreScores")
   moreScores.forEach( x => {
@@ -159,7 +153,6 @@ function addScoreboardEventListeners() {
 }
 
 function handleUserNavLinks() {
-  //console.log(e.target)
   if (userNavLinks.style.display == "none") {
     userNavLinks.style.display = "flex"
     navChevron.classList.replace("fa-chevron-down", "fa-chevron-up")
@@ -170,7 +163,6 @@ function handleUserNavLinks() {
 }
 
 function showMoreOrLessScores() {
-  //console.log("showMoreOrLessScores")
   if (displayMoreScores[0].style.display == "none") {
     displayMoreScores.forEach( x => {
       x.style.display = "block"
@@ -240,7 +232,6 @@ function logoutUser(e) {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status >= 400) {
       alert(this.response)
-      console.log("error logging out")
     } 
     if (this.readyState == 4 && this.status == 200) {
       location.assign("/")
@@ -252,9 +243,9 @@ function logoutUser(e) {
 }
 
 // responsive nav
-const nav = document.querySelector(".nav")
-const navHamburger = document.getElementById("navHamburger")
-const navLinks = document.querySelectorAll(".navLink")
+const nav = document.querySelector(".nav"),
+      navHamburger = document.getElementById("navHamburger"),
+      navLinks = document.querySelectorAll(".navLink")
 
 navHamburger.addEventListener("click", displayNav)
 navLinks.forEach( x => {
