@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require("express");
-const helmet = require("helmet");
+require('dotenv').config()
+const express = require("express")
+const helmet = require("helmet")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 const session = require("express-session")
@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-//app.use(helmet());
+//app.use(helmet())
 
 app.use("/public", express.static(process.cwd() + "/public"))
 
@@ -39,7 +39,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // Equals 1 day (1 day * 24 hr/1 day * 60 min/1 hr * 60 sec/1 min * 1000 ms / 1 sec)
     secure: false
-}
+  }
 }))
 
 //Routing for API 
