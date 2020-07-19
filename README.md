@@ -1,7 +1,7 @@
 # Mine-Sweeper
 This is my own version of the classic Minesweeper computer game.  
 
-It is built with JavaScript, HTML, and CSS.
+It's a full stack app built with Node.js, Express, Mongoose, and MongoDB to store users' scores, and JavaScript for the game logic.
 
 You can try it out here: https://codepen.io/EOJA/full/zYYmgpe.
 
