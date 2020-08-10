@@ -366,10 +366,10 @@ function instructions() {
   const instructions = document.getElementById("instructions");
   if (instructions.style.display === "none") {
     instructions.style.display = "block";
-    howToPlay.firstElementChild.innerHTML = "Hide Instructions<hr>";
+    howToPlay.firstChild.nodeValue = "Hide Instructions";
   } else {
     instructions.style.display = "none";
-    howToPlay.firstElementChild.innerHTML = "Show Instructions<hr>";
+    howToPlay.firstChild.nodeValue = "Show Instructions";
   }
 }
 
