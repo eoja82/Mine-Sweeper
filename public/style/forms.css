@@ -30,7 +30,7 @@
   from {top: -300px; opacity: 0}
   to {top: 0; opacity: 1}
 }
-.modalHeader {
+.modalHeader h3 {
   font-size: 1.6rem;
 }
 #loginForm {
@@ -42,7 +42,7 @@ input[type=text], input[type=password], input[type=email] {
   width: 250px;
   height: 2rem;
   font-size: 1rem;
-  color: whitesmoke;
+  color: rgb(245, 245, 245);
   background-color: rgb(40, 40, 40);
   border: none;
   border-radius: 0;
@@ -52,6 +52,9 @@ input[type=text], input[type=password], input[type=email] {
 }
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
   border-bottom: 1px solid rgb(0, 193, 252);
+  color: rgb(245, 245, 245);
+  background-color: rgb(55, 55, 55);
+  outline: none;
 }
 input[type=submit] {
   width: 250px;
@@ -194,6 +197,12 @@ label[for="cannotBeUndone"], label[for="confirmPasswordChange"] {
 }
 
 @media only screen and (max-width: 440px) {
+  .modalContent {
+    width: 90%;
+  }
+  .modalHeader h3 {
+    margin: .3rem;
+  }
   label[for="cannotBeUndone"], label[for="confirmPasswordChange"] {
     max-width: 250px;
   }
