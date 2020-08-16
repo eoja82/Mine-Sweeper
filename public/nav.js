@@ -19,7 +19,6 @@ navLinks.forEach( x => {
 })
 
 function underlineNavLink(event) {
-  console.log("mouseenter")
   // disable if touched not mouseenter
   if (event.webkitForce > 0 || event.mozPressure > 0) return;
   event.target.firstElementChild.style.visibility = "visible";
