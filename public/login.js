@@ -241,20 +241,3 @@ function logoutUser(e) {
   xhttp.send()
   e.preventDefault()
 }
-
-// responsive nav
-const nav = document.querySelector(".nav"),
-      navHamburger = document.getElementById("navHamburger"),
-      navLinks = document.querySelectorAll(".navLink")
-
-navHamburger.addEventListener("click", displayNav)
-navLinks.forEach( x => {
-  x.addEventListener("click", displayNav)
-})
-
-function displayNav() {
-  if (nav.className == "nav") {
-    nav.classList.add("navResponsive")
-  }
-  else nav.className = "nav"
-}
