@@ -64,16 +64,12 @@ body {
   visibility: hidden;
   transition: .3s;
 }
-.navLink:hover hr, #login:hover hr {
-  width: 100%;
-  visibility: visible;
-}
 #navHamburger {
   color: rgb(190, 190, 190);
   font-size: 2.25rem;
   display: none;
+  text-decoration: none;
 }
-
 h1 {
   text-align: center;
   font-family: 'Bungee Shade', cursive;
@@ -111,13 +107,6 @@ h1 {
   .nav.navResponsive button {
     display: block;
   }
-  #game {
-    margin-left: .5rem;
-    margin-right: .5rem;
-  }
-  #game, #scoresContainer {
-    overflow-y: scroll;
-  }
 }
 
 @media only screen and (max-width: 440px) {
@@ -126,11 +115,5 @@ h1 {
   }
   h1 {
     font-size: 2rem;
-  }
-  .modalContent {
-    width: 90%;
-  }
-  .modalHeader h3 {
-    margin: .3rem;
   }
 }
