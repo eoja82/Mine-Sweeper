@@ -262,3 +262,12 @@ select {
     margin-right: auto;
   }
 }
+@media only screen and (max-width: 600px) {
+  #game {
+    margin-left: .5rem;
+    margin-right: .5rem;
+  }
+  #game, #scoresContainer {
+    overflow-y: scroll;
+  }
+}
