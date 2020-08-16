@@ -317,6 +317,8 @@ function reset() {
 
 // sets preset game level
 function setGameLevel(e) {
+  // need blur() so the select tag does not keep focus on some mobile devices
+  e.target.blur()
   clearInterval(start);
   switch (e.target.selectedOptions[0].value) {
     case "beginner": width = 9, height = 9, mines = 10, gameLevel = "beginner", customGameLevels.style.display = "none";
