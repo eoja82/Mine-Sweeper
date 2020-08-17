@@ -65,6 +65,10 @@ input[type=submit] {
   border: 2px solid rgb(31, 201, 88);
   border-radius: 15px;
   transition: .3s;
+  /* to fix mobile background color */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 input[type=submit]:hover, input[type=submit]:focus {
   cursor: pointer;
