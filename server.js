@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-//app.use(helmet())
+app.use(helmet())
 
 app.use("/public", express.static(process.cwd() + "/public"))
 
