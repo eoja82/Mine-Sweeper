@@ -54,6 +54,8 @@ let timer = document.getElementById("timer");
 
 let grid = document.getElementById("grid");
 grid.style = "width: " + width * size + "px; height: " + height * size + "px;";
+// disable default right click on grid
+grid.oncontextmenu = function() { return false };
 
 // custom game grid
 let userGame = document.getElementById("userGame");
