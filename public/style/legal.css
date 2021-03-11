@@ -27,8 +27,8 @@
 #termsAndPrivacyPolicy {
   position: relative;
   width: 80%;
-  background-color: rgb(190, 190, 190);
-  color: black;
+  background-color: rgb(240, 240, 240);
+  color: rgb(38, 38, 38);
   margin: 1rem auto;
   transition: .4s;
   padding: 1rem;

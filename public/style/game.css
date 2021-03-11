@@ -205,20 +205,23 @@ select {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-
 #instructions {
   width: 90%;
-  margin: 0 auto 3% auto;
+  margin: 2% auto 3% auto;
   padding: 2%;
-  background-color: rgb(255, 255, 255, .7);
+  background-color: rgb(240, 240, 240);
+  color: rgb(38, 38, 38);
   position: relative;
 }
 #closeInstructions {
   position: absolute;
-  top: 8px;
-  right: 18px;
+  top: 0;
+  right: 10px;
   cursor: pointer;
   font-size: 2rem;
+}
+#instructions > h3:nth-child(2) {
+  margin-top: 0;
 }
 
 @media only screen and (max-width: 1100px) {
