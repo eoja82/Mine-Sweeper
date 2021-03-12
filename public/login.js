@@ -152,14 +152,21 @@ function addScoreboardEventListeners() {
   })
 }
 
-function handleUserNavLinks() {
+function handleUserNavLinks(e) {
+  if (e) e.stopPropagation()
   if (userNavLinks.style.display == "none") {
     userNavLinks.style.display = "flex"
     navChevron.classList.replace("fa-chevron-down", "fa-chevron-up")
+    addEventListener("click", closeUserNav)
   } else {
     userNavLinks.style.display = "none"
     navChevron.classList.replace("fa-chevron-up", "fa-chevron-down")
+    removeEventListener("click", closeUserNav)
   }
+}
+
+function closeUserNav(e) {
+  if (e.target !== userNavLinks) handleUserNavLinks()
 }
 
 function showMoreOrLessScores() {
