@@ -64,7 +64,7 @@ function getScoresLoginStatus() {
         setLeaderboardScores(res, loggedIn)
         
         if (!loggedIn) {
-          displayModal()
+          setTimeout(displayModal, 3000)
           welcome.style.display = "none"
           welcome.removeEventListener("click", handleUserNavLinks)
           navLogin.addEventListener("click", displayModal)
@@ -203,9 +203,11 @@ noAccount.addEventListener("click", closeModal)
 
 function displayModal() {
   loginModal.style.display = "block"
+  if (playing) startStopTimer(false)
 }
 function closeModal() {
   loginModal.style.display = "none"
+  if (playing) startStopTimer(true)
 }
 
 // login user
